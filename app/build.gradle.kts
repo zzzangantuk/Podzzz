@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+//    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kotlin-parcelize")
@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "app.podiumpodcasts.podium"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
     dependenciesInfo {
@@ -24,7 +24,7 @@ android {
     defaultConfig {
         applicationId = "app.podiumpodcasts.podium"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1000008
         versionName = "1.0.0-alpha08"
 
@@ -56,11 +56,9 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
     }
     buildFeatures {
         compose = true
@@ -73,12 +71,14 @@ aboutLibraries {
 }
 
 dependencies {
+    implementation(libs.androidx.material3)
     implementation(libs.coroutines.guava)
     implementation(libs.concurrent.futures)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Third party licenses for settings
     implementation(libs.aboutlibraries.core)
@@ -128,7 +128,6 @@ dependencies {
     // Networking & Content Loading
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.client.serialization.json)
     implementation(libs.ktor.client.logging)
@@ -163,14 +162,12 @@ dependencies {
     // Background tasks
     implementation(libs.androidx.work.runtime.ktx)
 
-    implementation("androidx.concurrent:concurrent-futures-ktx:1.1.0")
 
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
