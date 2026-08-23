@@ -1,43 +1,44 @@
 [versions]
-aboutLibraries = "14.0.0-b02" # Use the latest version
-agp = "8.13.2"
+aboutLibraries = "15.1.0" # Use the latest version
+agp = "9.3.1"
 browser = "1.10.0"
-coilCompose = "3.3.0"
-coilNetworkKtor3 = "3.3.0"
-composeShimmer = "1.3.3"
+coilCompose = "3.5.0"
+coilNetworkKtor3 = "3.5.0"
+composeShimmer = "1.5.0"
 coreSplashscreen = "1.2.0"
-datastorePreferences = "1.2.0"
+datastorePreferences = "1.2.1"
 haze = "1.7.2"
-kotlin = "2.2.21"
-coreKtx = "1.17.0"
+kotlin = "2.4.10"
+coreKtx = "1.19.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-kotlinxSerializationJson = "1.10.0"
-lifecycleRuntimeKtx = "2.10.0"
-activityCompose = "1.12.4"
-composeBom = "2026.02.00"
-xmlutil = "1.0.0-rc2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+kotlinxSerializationJson = "1.11.0"
+lifecycleRuntimeKtx = "2.11.0"
+activityCompose = "1.13.0"
+composeBom = "2026.08.00"
+xmlutil = "1.0.2"
 
 # Navigation 3
-material = "1.13.0"
-materialKolor = "5.0.0-alpha06"
-media3 = "1.9.2"
-nav3Core = "1.0.1"
-lifecycleViewmodelNav3 = "2.10.0"
-kotlinSerialization = "2.2.21"
-kotlinxSerializationCore = "1.9.0"
-material3AdaptiveNav3 = "1.3.0-alpha08"
+material = "1.14.0"
+materialKolor = "5.0.0"
+media3 = "1.11.0"
+nav3Core = "1.1.6"
+lifecycleViewmodelNav3 = "2.11.0"
+kotlinSerialization = "2.4.10"
+kotlinxSerializationCore = "1.11.0"
+material3AdaptiveNav3 = "1.3.0"
 
 # Network
-ktor = "3.4.0"
+ktor = "3.5.2"
 
 # Database
-paging = "3.4.1"
-reorderable = "3.0.0"
+paging = "3.5.1"
+reorderable = "3.1.0"
 room = "2.8.4"
-rssparser = "6.1.4"
-workRuntimeKtx = "2.11.1"
+rssparser = "6.1.8"
+workRuntimeKtx = "2.11.2"
+material3 = "1.5.0-alpha26"
 
 [libraries]
 aboutlibraries-core = { group = "com.mikepenz", name = "aboutlibraries-core", version.ref = "aboutLibraries" }
@@ -65,7 +66,7 @@ haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version = "1.10.2" }
+coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version = "1.11.0" }
 concurrent-futures = { group = "androidx.concurrent", name = "concurrent-futures-ktx", version = "1.3.0" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -76,7 +77,7 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version = "1.5.0-alpha14" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 # Navigation 3 libraries
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
@@ -107,6 +108,7 @@ rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparse
 # XML
 xmlutil-core = { module = "io.github.pdvrieze.xmlutil:core-android", version.ref = "xmlutil" }
 xmlutil-serialization = { module = "io.github.pdvrieze.xmlutil:serialization", version.ref = "xmlutil" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
