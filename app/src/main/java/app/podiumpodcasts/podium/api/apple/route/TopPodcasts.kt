@@ -17,11 +17,16 @@ class TopPodcasts(
         limit: Int = 50,
         genre: Genre? = null
     ): List<PodcastPreviewModel> {
+        val normalizedCountryCode = if(countryCode.length == 2) countryCode else "US"
         val genreStr = genre?.let { "genre=${it.id}/" } ?: ""
 
         val body =
-            client.httpClient.get("https://itunes.apple.com/$countryCode/rss/toppodcasts/limit=$limit/${genreStr}explicit=true/json")
+            client.httpClient.get("https://itunes.apple.com/$normalizedCountryCode/rss/toppodcasts/limit=$limit/${genreStr}explicit=true/json")
                 .body<String>()
+
+        if(!body.trimStart().startsWith("{")) {
+            throw IllegalStateException("Invalid response from Apple Podcasts API")
+        }
 
         val response = json.decodeFromString<TopPodcastsResponse>(body)
         return response.feed.entry.mapNotNull { it.toPodcastPreview() }

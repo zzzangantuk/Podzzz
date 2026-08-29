@@ -49,7 +49,7 @@ fun getCountryCode(
     }
 
     try {
-        return Locale.getDefault().isO3Country.uppercase()
+        return Locale.getDefault().country.uppercase()
     } catch(e: Exception) {
         e.printStackTrace()
         return "US"
