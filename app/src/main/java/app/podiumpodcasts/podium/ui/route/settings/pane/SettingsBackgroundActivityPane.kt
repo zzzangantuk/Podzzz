@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -39,10 +38,11 @@ import app.podiumpodcasts.podium.ui.vm.RoamingWarningDialogState
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
 import app.podiumpodcasts.podium.ui.vm.UPDATE_PODCASTS_INTERVAL_VALUES
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsBackgroundActivityKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -83,8 +83,8 @@ fun SettingsBackgroundActivityPane(
 
                 SettingsSwitchListItem(
                     checked = updatePodcastsInRoaming.value,
-                    onCheckedChange = {
-                        if(it) {
+                    onCheckedChange = { checked ->
+                        if(checked) {
                             vm.roamingWarningDialogState.value =
                                 RoamingWarningDialogState.ShowUpdate
                         } else {
@@ -120,7 +120,7 @@ fun SettingsBackgroundActivityPane(
                     label = stringResource(R.string.route_settings_background_activity_update_frequency),
 
                     value = vm.updatePodcastsIntervalMinutesSliderState.floatValue,
-                    onValueChange = { vm.updateUpdatePodcastsIntervalMinutesSlider(it) },
+                    onValueChange = { sliderValue -> vm.updateUpdatePodcastsIntervalMinutesSlider(sliderValue) },
                     valueRange = 0f..(UPDATE_PODCASTS_INTERVAL_VALUES.size - 1).toFloat(),
                     steps = UPDATE_PODCASTS_INTERVAL_VALUES.size - 1,
 

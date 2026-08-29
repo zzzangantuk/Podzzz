@@ -50,17 +50,16 @@ class NextcloudGpodderClient(
 
     suspend fun <T> parseResponse(
         response: HttpResponse,
-        parseResult: suspend () -> T = { Unit as T }
+        parseResult: suspend () -> T
     ): SyncResult.Success<T> {
-        if(response.status == HttpStatusCode.Unauthorized || response.status == HttpStatusCode.Forbidden)
+        if (response.status == HttpStatusCode.Unauthorized || response.status == HttpStatusCode.Forbidden)
             throw SyncResult.Unauthenticated(response)
 
-        if(response.status != HttpStatusCode.OK)
+        if (response.status != HttpStatusCode.OK)
             throw SyncResult.Failure(response)
 
         return SyncResult.Success(
             result = parseResult()
         )
     }
-
 }

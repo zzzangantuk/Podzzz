@@ -12,7 +12,7 @@ import io.ktor.http.path
 import io.ktor.http.takeFrom
 
 class Auth(
-    val client: NextcloudGpodderClient
+    client: NextcloudGpodderClient,
 ) : ApiRoute(client) {
 
     /**

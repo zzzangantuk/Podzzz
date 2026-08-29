@@ -69,7 +69,7 @@ import app.podiumpodcasts.podium.ui.vm.importing.State
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun OpmlImportingRoute(
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val db = LocalDatabase.current
@@ -77,7 +77,7 @@ fun OpmlImportingRoute(
     val vm = remember { OpmlImportingViewModel() }
 
     val pickFileLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument()
+        ActivityResultContracts.OpenDocument(),
     ) { uri: Uri? ->
         uri?.let { vm.selectFile(context, db, uri) }
     }
@@ -124,7 +124,7 @@ fun OpmlImportingRoute(
         },
         bottomBar = {
             AnimatedVisibility(
-                visible = vm.state.value is State.SelectOutlines && vm.selectedOrigins.isNotEmpty(),
+                visible = (vm.state.value is State.SelectOutlines) && vm.selectedOrigins.isNotEmpty(),
                 enter = slideInVertically { it } + fadeIn(),
                 exit = slideOutVertically { it } + fadeOut()
             ) {
@@ -135,7 +135,7 @@ fun OpmlImportingRoute(
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                             onClick = {
-                                vm.add(context, PodcastManager(db))
+                                vm.add(PodcastManager(db))
                             }
                         ) {
                             Icon(Icons.Rounded.Add, stringResource(R.string.common_action_add))

@@ -11,7 +11,7 @@ import app.podiumpodcasts.podium.api.db.model.PodcastModel
 import kotlinx.coroutines.flow.Flow
 
 interface LibrarySearchState {
-    class Idle() : LibrarySearchState
+    class Idle : LibrarySearchState
     data class Done(
         val podcastsPager: Flow<PagingData<PodcastModel>>,
         val episodesPager: Flow<PagingData<PodcastEpisodeBundle>>

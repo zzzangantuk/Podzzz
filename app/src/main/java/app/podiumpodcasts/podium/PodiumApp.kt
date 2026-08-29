@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.podiumpodcasts.podium.ui.DeepLink
 import app.podiumpodcasts.podium.ui.Main
-import app.podiumpodcasts.podium.ui.navigation.Home
 import app.podiumpodcasts.podium.ui.theme.PodiumTheme
 
 @Composable

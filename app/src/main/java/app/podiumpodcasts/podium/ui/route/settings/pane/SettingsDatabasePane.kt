@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -29,17 +28,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.podiumpodcasts.podium.R
-import app.podiumpodcasts.podium.ui.component.settings.SettingsHeader
+import app.podiumpodcasts.podium.ui.component.layout.ListHeading
 import app.podiumpodcasts.podium.ui.component.settings.SettingsListItem
 import app.podiumpodcasts.podium.ui.helper.LocalDatabase
 import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
 import app.podiumpodcasts.podium.ui.route.settings.SettingsPaneKey
 import app.podiumpodcasts.podium.ui.vm.ExportDatabaseState
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsDatabaseKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -156,8 +156,8 @@ fun SettingsDatabasePane(
             }
 
             item {
-                SettingsHeader(
-                    label = stringResource(R.string.route_settings_import_export)
+                ListHeading(
+                    heading = stringResource(R.string.route_settings_import_export),
                 )
             }
 

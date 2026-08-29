@@ -1,10 +1,10 @@
 package app.podiumpodcasts.podium.api.db.model
 
-import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.room.Embedded
 import androidx.room.Relation
+import androidx.core.net.toUri
 
 data class PodcastSubscriptionBundle(
     @Embedded val subscription: PodcastSubscriptionModel,
@@ -22,7 +22,7 @@ data class PodcastSubscriptionBundle(
                     .setTitle(podcast.title)
                     .setDescription(podcast.description)
                     .setArtist(podcast.author)
-                    .setArtworkUri(Uri.parse(podcast.imageUrl))
+                    .setArtworkUri(podcast.imageUrl.toUri())
                     .setMediaType(MediaMetadata.MEDIA_TYPE_PODCAST)
                     .setIsBrowsable(true)
                     .setIsPlayable(false)

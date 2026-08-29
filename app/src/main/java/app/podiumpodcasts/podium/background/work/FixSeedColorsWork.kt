@@ -16,7 +16,7 @@ import com.materialkolor.ktx.themeColorOrNull
 
 class FixSeedColorsWork(
     val context: Context,
-    val db: AppDatabase
+    val db: AppDatabase,
 ) {
 
     suspend fun doWork() {
@@ -44,7 +44,7 @@ class FixSeedColorsWork(
 
         val request = ImageRequest.Builder(context)
             .data(imageUrl)
-            .allowHardware(false)
+            .allowHardware(enable = false)
             .build()
 
         val result = loader.execute(request)

@@ -7,7 +7,6 @@ import android.view.KeyEvent
 import androidx.core.content.IntentCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.LibraryResult
@@ -76,7 +75,7 @@ class MediaLibrarySessionCallback(
             .add(SessionCommand.COMMAND_CODE_LIBRARY_GET_LIBRARY_ROOT)
             .build()
 
-        return MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+        return MediaSession.ConnectionResult.AcceptedResultBuilder(session, controller)
             .setAvailableSessionCommands(sessionCommands)
             .setAvailablePlayerCommands(MediaSession.ConnectionResult.DEFAULT_PLAYER_COMMANDS)
             .build()
@@ -167,6 +166,7 @@ class MediaLibrarySessionCallback(
                 when(keyEvent.keyCode) {
                     KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD,
                     KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                        session.player.seekBack()
                         return true
                     }
 
@@ -179,26 +179,6 @@ class MediaLibrarySessionCallback(
             }
 
         return super.onMediaButtonEvent(session, controllerInfo, intent)
-    }
-
-    /**
-     * Remap COMMAND_SEEK_TO_PREVIOUS and COMMAND_SEEK_TO_NEXT to seek back and seek forward
-     * To allow seeking using headphone buttons for example
-     */
-    override fun onPlayerCommandRequest(
-        session: MediaSession,
-        controller: MediaSession.ControllerInfo,
-        playerCommand: Int
-    ): Int {
-        if(playerCommand == Player.COMMAND_SEEK_TO_PREVIOUS) {
-            session.player.seekBack()
-            return SessionResult.RESULT_INFO_SKIPPED
-        } else if(playerCommand == Player.COMMAND_SEEK_TO_NEXT) {
-            session.player.seekForward()
-            return SessionResult.RESULT_INFO_SKIPPED
-        }
-
-        return super.onPlayerCommandRequest(session, controller, playerCommand)
     }
 
     override fun onGetLibraryRoot(

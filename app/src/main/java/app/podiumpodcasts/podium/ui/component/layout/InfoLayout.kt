@@ -22,11 +22,11 @@ fun InfoLayout(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     title: @Composable () -> String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(
         modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             Modifier.padding(24.dp),
@@ -34,14 +34,14 @@ fun InfoLayout(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = title()
+                contentDescription = title(),
             )
 
             Spacer(Modifier.height(16.dp))
 
             Text(
                 text = title(),
-                style = Typography.titleMediumEmphasized
+                style = Typography.titleMediumEmphasized,
             )
 
             Spacer(Modifier.height(8.dp))

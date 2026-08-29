@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,10 +30,11 @@ import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
 import app.podiumpodcasts.podium.ui.route.settings.SettingsPaneKey
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsAppearanceKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -57,7 +57,7 @@ fun SettingsAppearancePane(
 
                 title = {
                     Text(stringResource(R.string.route_settings_appearance))
-                }
+                },
             )
         }
     ) {
@@ -75,9 +75,9 @@ fun SettingsAppearancePane(
 
                 SettingsSwitchListItem(
                     checked = enableArtworkColors.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.appearance.setEnableArtworkColors(it)
+                            vm.repository.appearance.setEnableArtworkColors(checked)
                         }
                     },
 
@@ -97,13 +97,13 @@ fun SettingsAppearancePane(
 
             item {
                 val useAlternativeBranding =
-                    vm.repository.appearance.useAlternativeBranding.collectAsState(true)
+                    vm.repository.appearance.useAlternativeBranding.collectAsState(false)
 
                 SettingsSwitchListItem(
                     checked = useAlternativeBranding.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.appearance.setUseAlternativeBranding(context, it)
+                            vm.repository.appearance.setUseAlternativeBranding(context, checked)
                         }
                     },
 

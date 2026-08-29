@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -50,7 +51,7 @@ class MediaPlayerViewModel : ViewModel() {
 
     private var mediaController: MediaController? = null
 
-    var isPlayerVisible by mutableStateOf(false)
+    var isPlayerVisible by mutableStateOf(value = false)
 
     var isPlaying by mutableStateOf(false)
     var playWhenReady by mutableStateOf(false)
@@ -82,7 +83,7 @@ class MediaPlayerViewModel : ViewModel() {
 
     fun play(
         context: Context,
-        bundle: PodcastEpisodeBundle
+        bundle: PodcastEpisodeBundle,
     ) {
         if(bundle.episode.new) viewModelScope.launch {
             db.podcastEpisodes().unnewAndUpdateNewEpisodesCount(
@@ -198,7 +199,7 @@ class MediaPlayerViewModel : ViewModel() {
     }
 
     @Composable
-    fun getProgressState(): MutableState<Float> {
+    fun getProgressState(): MutableFloatState {
         val progressState = remember { mutableFloatStateOf(0f) }
 
         LaunchedEffect(lastProgressUpdate) {

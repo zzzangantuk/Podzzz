@@ -64,8 +64,7 @@ class OpmlImportingViewModel : ViewModel() {
     }
 
     fun add(
-        context: Context,
-        podcastManager: PodcastManager
+        podcastManager: PodcastManager,
     ) {
         state.value = State.Unpacking
 

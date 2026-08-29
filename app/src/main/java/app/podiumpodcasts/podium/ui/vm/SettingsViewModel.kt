@@ -41,7 +41,7 @@ val UPDATE_PODCASTS_INTERVAL_VALUES = listOf(
 
 enum class DeleteDownloadsAfterValues(
     val label: Int,
-    val seconds: Int
+    val seconds: Int,
 ) {
     DAY(R.string.route_settings_downloads_and_storage_delete_downloads_after_value_day, 86400),
     THREE_DAYS(

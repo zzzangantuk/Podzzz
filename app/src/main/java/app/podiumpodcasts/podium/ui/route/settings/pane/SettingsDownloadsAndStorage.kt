@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -42,10 +41,11 @@ import app.podiumpodcasts.podium.ui.vm.DeleteDownloadsAfterValues
 import app.podiumpodcasts.podium.ui.vm.RoamingWarningDialogState
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsDownloadsAndStorageKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -85,9 +85,9 @@ fun SettingsDownloadsAndStoragePane(
             item {
                 SettingsSwitchListItem(
                     checked = downloadMetered.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.behavior.setDownloadMetered(it)
+                            vm.repository.behavior.setDownloadMetered(checked)
                             vm.requeueDownloads(context, db)
                         }
                     },
@@ -114,8 +114,8 @@ fun SettingsDownloadsAndStoragePane(
                     enabled = downloadMetered.value,
 
                     checked = downloadInRoaming.value,
-                    onCheckedChange = {
-                        if(it) {
+                    onCheckedChange = { checked ->
+                        if(checked) {
                             vm.roamingWarningDialogState.value =
                                 RoamingWarningDialogState.ShowDownload
                         } else {
@@ -147,9 +147,9 @@ fun SettingsDownloadsAndStoragePane(
                     enabled = downloadMetered.value,
 
                     checked = applySettingsForAutoDownloads.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.behavior.setApplySettingsForAutoDownloads(it)
+                            vm.repository.behavior.setApplySettingsForAutoDownloads(checked)
                         }
                     },
 
@@ -177,9 +177,9 @@ fun SettingsDownloadsAndStoragePane(
 
                 SettingsSwitchListItem(
                     checked = deletePlayedDownloads.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.behavior.setDeletePlayedDownloads(it)
+                            vm.repository.behavior.setDeletePlayedDownloads(checked)
                         }
                     },
 
@@ -208,7 +208,7 @@ fun SettingsDownloadsAndStoragePane(
                     label = stringResource(R.string.route_settings_downloads_and_storage_delete_downloads_after),
 
                     value = vm.deleteDownloadsAfterSliderState.floatValue,
-                    onValueChange = { vm.updateDeleteDownloadsAfterSlider(it) },
+                    onValueChange = { sliderValue -> vm.updateDeleteDownloadsAfterSlider(sliderValue) },
                     valueRange = 0f..(DeleteDownloadsAfterValues.entries.size - 1).toFloat(),
                     steps = DeleteDownloadsAfterValues.entries.size - 2,
 

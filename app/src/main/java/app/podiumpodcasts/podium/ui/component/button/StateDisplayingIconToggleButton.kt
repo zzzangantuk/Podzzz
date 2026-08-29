@@ -13,10 +13,10 @@ import app.podiumpodcasts.podium.ui.component.common.StateDisplayingComponent
 @Composable
 fun StateDisplayingIconToggleButton(
     state: Float,
-    minimumState: Float = 0f,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    minimumState: Float = 0f,
     enabled: Boolean = true,
     colors: IconToggleButtonColors = IconButtonDefaults.iconToggleButtonColors(),
     interactionSource: MutableInteractionSource? = null,

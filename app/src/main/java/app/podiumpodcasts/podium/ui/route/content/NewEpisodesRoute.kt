@@ -46,7 +46,7 @@ import app.podiumpodcasts.podium.ui.vm.home.NewEpisodesViewModel
 @Composable
 fun NewEpisodesRoute(
     onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -123,7 +123,7 @@ fun NewEpisodesRoute(
                                     message = markedAsSeen,
                                     onUndo = {
                                         vm.new(item)
-                                    }
+                                    },
                                 )
                             }
                         ),

@@ -62,7 +62,7 @@ fun ListRoute(
     onClickPodcast: (origin: String) -> Unit,
     onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
 
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -188,7 +188,7 @@ fun ListRoute(
                                     message = elementDeleted,
                                     onUndo = {
                                         vm.restore(item)
-                                    }
+                                    },
                                 )
                             },
                             content = {

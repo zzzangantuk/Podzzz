@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,10 +28,11 @@ import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
 import app.podiumpodcasts.podium.ui.route.settings.SettingsPaneKey
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsPrivacyKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -72,9 +72,9 @@ fun SettingsPrivacyPane(
 
                 SettingsSwitchListItem(
                     checked = disableApplePodcastsApi.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.privacy.setDisableApplePodcastsApi(it)
+                            vm.repository.privacy.setDisableApplePodcastsApi(checked)
                         }
                     },
 

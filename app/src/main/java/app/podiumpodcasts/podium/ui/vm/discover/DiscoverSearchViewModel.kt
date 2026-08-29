@@ -11,9 +11,9 @@ import app.podiumpodcasts.podium.ui.dialog.bottomsheet.PodcastPreviewBottomSheet
 import kotlinx.coroutines.launch
 
 interface DiscoverSearchState {
-    class Idle() : DiscoverSearchState
-    class Loading() : DiscoverSearchState
-    class Empty() : DiscoverSearchState
+    class Idle : DiscoverSearchState
+    class Loading : DiscoverSearchState
+    class Empty : DiscoverSearchState
     data class Done(
         val result: List<PodcastPreviewModel>
     ) : DiscoverSearchState

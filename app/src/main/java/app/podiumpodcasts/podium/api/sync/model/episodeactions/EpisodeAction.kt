@@ -18,6 +18,7 @@ class EpisodeAction(
     @SerialName("device")
     val deviceId: String = "",
     val timestamp: String,
+    @Suppress("unused")
     val started: Int? = null,
     val position: Int? = null,
     val total: Int? = null
@@ -32,7 +33,7 @@ class EpisodeAction(
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
                 val dateTime = LocalDateTime.parse(timestamp, formatter)
                 return dateTime.toEpochSecond(ZoneOffset.UTC)
-            } catch(e: Exception) {
+            } catch(_: Exception) {
                 // fallback for nextcloud-gpodder
                 return OffsetDateTime.parse(timestamp).toEpochSecond()
             }

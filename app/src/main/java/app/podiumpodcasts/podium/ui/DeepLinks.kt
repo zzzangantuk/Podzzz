@@ -17,17 +17,6 @@ sealed class DeepLink {
     open val showMediaPlayerBottomSheet: Boolean = false
 
     @Serializable
-    class OpenPodcast(
-        val origin: String
-    ) : DeepLink() {
-        override val route: NavKey
-            get() = Home
-
-        override val detailPaneKey: DetailPaneKey
-            get() = DetailPaneKey.PodcastKey(origin)
-    }
-
-    @Serializable
     class OpenPodcastEpisode(
         val origin: String,
         val episodeId: String
@@ -40,7 +29,7 @@ sealed class DeepLink {
     }
 
     @Serializable
-    class OpenMediaPlayer() : DeepLink() {
+    object OpenMediaPlayer : DeepLink() {
         override val route: NavKey
             get() = Home
 

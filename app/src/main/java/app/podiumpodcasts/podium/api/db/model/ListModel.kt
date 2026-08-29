@@ -13,11 +13,10 @@ enum class SystemLists(
     val id: Int,
     val label: Int,
     val icon: ImageVector,
-    val onlyEpisodes: Boolean,
-    val hideFromSaveToList: Boolean = false
+    val onlyEpisodes: Boolean
 ) {
     HEAR_LATER(-1, R.string.system_lists_hear_later_label, Icons.Rounded.WatchLater, true),
-    FAVORITES(-2, R.string.system_lists_favorites_label, Icons.Rounded.Star, true, true);
+    FAVORITES(-2, R.string.system_lists_favorites_label, Icons.Rounded.Star, true);
 }
 
 @Entity(

@@ -1,8 +1,9 @@
 package app.podiumpodcasts.podium.ui.route.settings
 
-import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
+import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import app.podiumpodcasts.podium.ui.DetailPaneKey
@@ -25,12 +26,14 @@ import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsPrivacyKey
 import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsPrivacyPane
 import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsSynchronizationKey
 import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsSynchronizationPane
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 open class SettingsPaneKey : DetailPaneKey()
 
+@OptIn(UnstableApi::class)
 @Composable
 fun SettingsPane(
     showBackButton: Boolean,

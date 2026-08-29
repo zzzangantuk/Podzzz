@@ -15,15 +15,16 @@ import app.podiumpodcasts.podium.ui.theme.Typography
 @Composable
 fun ListHeading(
     heading: String,
-    contentPadding: PaddingValues = PaddingValues(12.dp)
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(12.dp),
 ) {
     Box(
-        Modifier.padding(contentPadding)
+        modifier.padding(contentPadding),
     ) {
         Text(
             text = heading,
             color = MaterialTheme.colorScheme.primary,
-            style = Typography.titleMediumEmphasized
+            style = Typography.titleMediumEmphasized,
         )
     }
 }

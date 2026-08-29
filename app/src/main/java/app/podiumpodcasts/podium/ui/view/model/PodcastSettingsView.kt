@@ -89,7 +89,7 @@ fun PodcastSettingsView(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                }
+                },
             )
         }
     ) { inset ->

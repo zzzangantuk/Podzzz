@@ -1,12 +1,12 @@
 package app.podiumpodcasts.podium.api.db.model
 
-import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.podiumpodcasts.podium.api.opml.model.OpmlOutline
+import androidx.core.net.toUri
 
 @Entity(tableName = "podcast")
 data class PodcastModel(
@@ -44,7 +44,7 @@ data class PodcastModel(
                     .setTitle(title)
                     .setDescription(description)
                     .setArtist(author)
-                    .setArtworkUri(Uri.parse(imageUrl))
+                    .setArtworkUri(imageUrl.toUri())
                     .setMediaType(MediaMetadata.MEDIA_TYPE_PODCAST)
                     .setIsBrowsable(true)
                     .setIsPlayable(false)

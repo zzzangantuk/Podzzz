@@ -32,14 +32,14 @@ fun Section(
     title: String,
     badge: (@Composable () -> Unit)? = null,
     onClickExpand: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Column(
-        modifier.padding(top = 16.dp, bottom = 16.dp)
+        modifier.padding(top = 16.dp, bottom = 16.dp),
     ) {
         Box(
             Modifier
-                .padding(start = 16.dp, end = 16.dp)
+                .padding(start = 16.dp, end = 16.dp),
         ) {
             Row(
                 Modifier

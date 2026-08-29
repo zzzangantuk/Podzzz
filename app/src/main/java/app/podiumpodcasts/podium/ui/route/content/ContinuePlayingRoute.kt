@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,10 +46,9 @@ import app.podiumpodcasts.podium.ui.vm.home.ContinuePlayingViewModel
 @Composable
 fun ContinuePlayingRoute(
     onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     val db = LocalDatabase.current
     val vm = viewModel { ContinuePlayingViewModel(db) }
@@ -102,11 +100,11 @@ fun ContinuePlayingRoute(
                     else -> vm.lazyListState
                 },
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
             ) {
                 items(
-                    continuePlaying.itemCount,
-                    key = continuePlaying.itemKey { it.episode.id }
+                    count = continuePlaying.itemCount,
+                    key = continuePlaying.itemKey { it.episode.id },
                 ) {
                     val item = continuePlaying[it] ?: return@items
 
@@ -133,7 +131,7 @@ fun ContinuePlayingRoute(
                                             played = previousPlayed,
                                             state = previousState
                                         )
-                                    }
+                                    },
                                 )
                             }
                         ),
@@ -153,10 +151,10 @@ fun ContinuePlayingRoute(
                                             played = previousPlayed,
                                             state = previousState
                                         )
-                                    }
+                                    },
                                 )
                             }
-                        )
+                        ),
                     ) {
                         PodcastEpisodeListItem(
                             bundle = item.toPodcastEpisodeBundle(),
@@ -172,7 +170,7 @@ fun ContinuePlayingRoute(
 
                             onClick = {
                                 onClickEpisode(item.episode)
-                            }
+                            },
                         )
                     }
                 }

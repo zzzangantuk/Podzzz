@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.component.model.episode
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -115,21 +114,23 @@ fun PodcastEpisodeDownloadButton(
     if(icon) {
         StateDisplayingIconToggleButton(
             state = animateState.value,
-            minimumState = 0f,
             checked = bundle.download != null,
-            colors = IconButtonDefaults.filledTonalIconToggleButtonColors(),
             onCheckedChange = { onCheckedChange() },
-            content = { inner() }
-        )
+            minimumState = 0f,
+            colors = IconButtonDefaults.filledTonalIconToggleButtonColors()
+        ) {
+            inner()
+        }
     } else {
         StateDisplayingToggleButton(
             state = animateState.value,
-            minimumState = 0f,
             checked = bundle.download != null,
-            colors = ToggleButtonDefaults.tonalToggleButtonColors(),
             onCheckedChange = { onCheckedChange() },
-            content = { inner() }
-        )
+            minimumState = 0f,
+            colors = ToggleButtonDefaults.colors()
+        ) {
+            inner()
+        }
     }
 
     if(showDownloadManagementBottomSheet.value) DownloadManagementBottomSheet(

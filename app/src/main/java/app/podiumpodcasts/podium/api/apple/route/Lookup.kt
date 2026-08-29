@@ -7,7 +7,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 class Lookup(
-    val client: ApplePodcastClient
+    client: ApplePodcastClient,
 ) : ApiRoute(client) {
 
     suspend fun getRssFeedUrl(

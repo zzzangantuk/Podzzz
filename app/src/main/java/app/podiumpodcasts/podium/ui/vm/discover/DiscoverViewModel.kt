@@ -45,7 +45,7 @@ enum class Topics(
 }
 
 interface State {
-    class Loading() : State
+    class Loading : State
     data class Done(
         val result: List<PodcastPreviewModel>,
         val countryCode: String

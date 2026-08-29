@@ -9,25 +9,23 @@ import kotlinx.coroutines.flow.first
 class DeleteOldDownloadsWork(
     val context: Context,
     val db: AppDatabase,
-    val settingsRepository: SettingsRepository = SettingsRepository(context)
+    val settingsRepository: SettingsRepository = SettingsRepository(context),
 ) {
 
-    suspend fun doWork(): Boolean {
+    suspend fun doWork() {
         val afterSeconds = settingsRepository.behavior.deleteDownloadsAfterSeconds.first()
-        if(afterSeconds == -1) return true
+        if (afterSeconds == -1) return
 
         val bundles = db.podcastEpisodeDownloads()
             .getOlderThanSync(System.currentTimeMillis() - (afterSeconds * 1000L))
 
-        for(bundle in bundles) {
+        for (bundle in bundles) {
             DownloadManager.deleteEpisodeDownload(
                 context = context,
                 db = db,
-                episode = bundle.episode
+                episode = bundle.episode,
             )
         }
-
-        return true
     }
 
 }

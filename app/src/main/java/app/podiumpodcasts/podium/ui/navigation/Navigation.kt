@@ -35,7 +35,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 open class PodiumNavKey(
     val showNavBar: Boolean = true,
-    val showMediaPlayer: Boolean = true
+    val showMediaPlayer: Boolean = true,
 ) : NavKey
 
 @Serializable
@@ -86,7 +86,7 @@ fun Navigation(
     onBack: () -> Unit = { },
 
     onClickPodcast: (origin: String) -> Unit,
-    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit
+    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
 ) {
     NavDisplay(
         backStack = backStack,
@@ -106,8 +106,8 @@ fun Navigation(
                     scaleIn(initialScale = 0.92f, animationSpec = tween(220, delayMillis = 90)))
                 .togetherWith(fadeOut(animationSpec = tween(90)))
         },
-        entryProvider = { key ->
-            when(key) {
+    ) { key ->
+        when (key) {
                 is Home -> NavEntry(key) {
                     HomeRoute(
                         onSettings = { backStack.add(Settings) },
@@ -122,7 +122,7 @@ fun Navigation(
                         onClickDiscover = { backStack.add(Discover) },
 
                         onClickPodcast = onClickPodcast,
-                        onClickEpisode = onClickEpisode
+                        onClickEpisode = onClickEpisode,
                     )
                 }
 
@@ -223,9 +223,9 @@ fun Navigation(
                         },
                         onPane = {
                             onOpenPane(
-                                it
+                                it,
                             )
-                        }
+                        },
                     ) {
                         onClosePane()
                         backStack.removeLastOrNull()
@@ -254,5 +254,4 @@ fun Navigation(
                 }
             }
         }
-    )
 }

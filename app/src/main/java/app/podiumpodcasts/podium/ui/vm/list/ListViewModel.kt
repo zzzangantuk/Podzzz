@@ -69,7 +69,7 @@ class ListViewModel(
     }
 
     suspend fun move(from: Int, to: Int) {
-        val id = db.listItems()._getItemIdAtPosition(listId, from)
+        val id = db.listItems().getItemIdAtPosition(listId, from)
         db.listItems().moveAndReindex(listId, id ?: 0, from, to)
     }
 

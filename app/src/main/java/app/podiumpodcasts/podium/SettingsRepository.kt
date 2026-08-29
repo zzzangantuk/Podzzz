@@ -19,7 +19,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 object SettingsKeys {
     val APPEARANCE_ENABLE_ARTWORK_COLORS = booleanPreferencesKey("appearance_enable_artwork_colors")
-    val APPEARANCE_ENABLE_DYNAMIC_COLORS = booleanPreferencesKey("appearance_enable_dynamic_colors")
     val APPEARANCE_USE_ALTERNATIVE_BRANDING =
         booleanPreferencesKey("appearance_use_alternative_branding")
 
@@ -82,34 +81,26 @@ class SettingsRepository(val context: Context) {
             preferences[SettingsKeys.APPEARANCE_ENABLE_ARTWORK_COLORS] = enable
         }
 
-        val enableDynamicColors: Flow<Boolean> = dataStore.data
-            .map { preferences ->
-                preferences[SettingsKeys.APPEARANCE_ENABLE_DYNAMIC_COLORS] ?: true
-            }
-
-        suspend fun setEnableDynamicColors(enable: Boolean) = dataStore.edit { preferences ->
-            preferences[SettingsKeys.APPEARANCE_ENABLE_DYNAMIC_COLORS] = enable
-        }
-
         val useAlternativeBranding: Flow<Boolean> = dataStore.data
             .map { preferences ->
                 preferences[SettingsKeys.APPEARANCE_USE_ALTERNATIVE_BRANDING] ?: false
             }
 
         suspend fun setUseAlternativeBranding(context: Context, enable: Boolean): Preferences {
-            val default = ComponentName(context.packageName, "${context.packageName}.Default")
-            val alias = ComponentName(context.packageName, "${context.packageName}.Alias")
+            val basePackage = "app.podiumpodcasts.podium"
+            val default = ComponentName(context.packageName, "$basePackage.Default")
+            val alias = ComponentName(context.packageName, "$basePackage.Alias")
 
             context.packageManager.setComponentEnabledSetting(
-                if(enable) alias else default,
+                if (enable) alias else default,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP
+                PackageManager.DONT_KILL_APP,
             )
 
             context.packageManager.setComponentEnabledSetting(
-                if(enable) default else alias,
+                if (enable) default else alias,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP
+                PackageManager.DONT_KILL_APP,
             )
 
             return dataStore.edit { preferences ->
@@ -141,7 +132,7 @@ class SettingsRepository(val context: Context) {
 
         val playerSeekBackIncrement: Flow<Long> = dataStore.data
             .map { preferences ->
-                preferences[SettingsKeys.BEHAVIOR_PLAYER_SEEK_BACK_INCREMENT] ?: 10000
+                preferences[SettingsKeys.BEHAVIOR_PLAYER_SEEK_BACK_INCREMENT] ?: 10000L
             }
 
         suspend fun setPlayerSeekBackIncrement(increment: Long) = dataStore.edit { preferences ->
@@ -150,7 +141,7 @@ class SettingsRepository(val context: Context) {
 
         val playerSeekForwardIncrement: Flow<Long> = dataStore.data
             .map { preferences ->
-                preferences[SettingsKeys.BEHAVIOR_PLAYER_SEEK_FORWARD_INCREMENT] ?: 10000
+                preferences[SettingsKeys.BEHAVIOR_PLAYER_SEEK_FORWARD_INCREMENT] ?: 10000L
             }
 
         suspend fun setPlayerSeekForwardIncrement(increment: Long) = dataStore.edit { preferences ->

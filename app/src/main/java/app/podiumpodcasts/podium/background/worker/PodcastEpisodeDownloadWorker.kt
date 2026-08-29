@@ -7,18 +7,13 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import androidx.work.impl.WorkManagerImpl
 import androidx.work.workDataOf
 import app.podiumpodcasts.podium.SettingsRepository
 import app.podiumpodcasts.podium.background.work.PodcastEpisodeDownloadWork
 import app.podiumpodcasts.podium.manager.DatabaseManager
-import app.podiumpodcasts.podium.ui.route.settings.SettingsRoute
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
 
 const val KEY_EPISODE_ID = "KEY_EPISODE_ID"
 

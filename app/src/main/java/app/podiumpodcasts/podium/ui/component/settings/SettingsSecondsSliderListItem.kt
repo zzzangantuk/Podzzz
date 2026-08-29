@@ -33,7 +33,7 @@ fun SettingsSecondsSliderListItem(
     count: Int = 1
 ) {
     val state = remember { mutableFloatStateOf(0f) }
-    LaunchedEffect(value) { state.value = (value / max.toFloat()) }
+    LaunchedEffect(value) { state.floatValue = (value / max.toFloat()) }
 
     SettingsListItem(
         icon = icon,
@@ -53,13 +53,13 @@ fun SettingsSecondsSliderListItem(
 
                 Slider(
                     enabled = enabled,
-                    value = state.value,
+                    value = state.floatValue,
                     onValueChange = {
                         val seconds = (max * it)
                             .roundToInt()
                             .coerceAtLeast(min)
 
-                        state.value = it
+                        state.floatValue = it
                         onValueChange(seconds)
                     },
                     onValueChangeFinished = onValueChangeFinished

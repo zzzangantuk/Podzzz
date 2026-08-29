@@ -67,12 +67,12 @@ fun FloatingMediaPlayer(
     hide: Boolean = false,
     showMediaPlayerBottomSheet: Boolean = false,
     onMediaPlayerShownChange: (shown: Boolean) -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val settingsRepository = LocalSettingsRepository.current
     val vm = viewModel<MediaPlayerViewModel>()
 
-    val enableArtworkColors = settingsRepository.appearance.enableArtworkColors.collectAsState(true)
+    val enableArtworkColors = settingsRepository.appearance.enableArtworkColors.collectAsState(initial = true)
 
     val showMediaPlayer = remember { mutableStateOf(false) }
     LaunchedEffect(vm.isPlayerVisible, showMediaPlayerBottomSheet) {
@@ -174,7 +174,7 @@ fun FloatingMediaPlayer(
                                 LinearWavyProgressIndicator(
                                     modifier = Modifier.fillMaxWidth(),
                                     color = MaterialTheme.colorScheme.secondary,
-                                    progress = { progressState.value },
+                                    progress = { progressState.floatValue },
                                     amplitude = { if(vm.isPlaying) 1f else 0f }
                                 )
                             }

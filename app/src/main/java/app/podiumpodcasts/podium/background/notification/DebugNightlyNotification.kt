@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat
 import app.podiumpodcasts.podium.R
 import kotlin.math.roundToInt
 
-class DebugNightlyNotification() : NotificationContainer() {
+class DebugNightlyNotification : NotificationContainer() {
 
     override fun notificationId(): Int = (Math.random() * 10000).roundToInt()
 

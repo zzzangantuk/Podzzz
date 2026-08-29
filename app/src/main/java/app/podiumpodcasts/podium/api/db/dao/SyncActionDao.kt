@@ -20,10 +20,10 @@ interface SyncActionDao {
         audioUrl: String,
         duration: Int,
         state: Int,
-        played: Boolean
+        played: Boolean,
     ) {
         delete("play:$episodeId")
-        _insert(
+        insert(
             SyncActionModel(
                 id = "play:$episodeId",
                 actionType = SyncActionType.PLAY.name,
@@ -41,7 +41,7 @@ interface SyncActionDao {
         origin: String
     ) {
         delete(origin)
-        _insert(
+        insert(
             SyncActionModel(
                 id = origin,
                 actionType = SyncActionType.SUBSCRIBE.name,
@@ -56,7 +56,7 @@ interface SyncActionDao {
         origin: String
     ) {
         delete(origin)
-        _insert(
+        insert(
             SyncActionModel(
                 id = origin,
                 actionType = SyncActionType.UNSUBSCRIBE.name,
@@ -76,6 +76,6 @@ interface SyncActionDao {
     suspend fun clear()
 
     @Insert
-    suspend fun _insert(model: SyncActionModel)
+    suspend fun insert(model: SyncActionModel)
 
 }

@@ -1,6 +1,5 @@
 package app.podiumpodcasts.podium.ui.route.settings.pane
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -46,10 +45,11 @@ import app.podiumpodcasts.podium.ui.route.settings.SettingsPaneKey
 import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-@SuppressLint("ParcelCreator")
 @Serializable
+@Parcelize
 class SettingsDebugKey : SettingsPaneKey()
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -90,9 +90,9 @@ fun SettingsDebugPane(
 
                 SettingsSwitchListItem(
                     checked = enableUpdateNotification.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.debug.setEnableUpdateNotification(it)
+                            vm.repository.debug.setEnableUpdateNotification(checked)
                         }
                     },
 
@@ -113,9 +113,9 @@ fun SettingsDebugPane(
 
                 SettingsSwitchListItem(
                     checked = enableNightlyNotification.value,
-                    onCheckedChange = {
+                    onCheckedChange = { checked ->
                         scope.launch {
-                            vm.repository.debug.setEnableNightlyNotification(it)
+                            vm.repository.debug.setEnableNightlyNotification(checked)
                         }
                     },
 
@@ -197,12 +197,12 @@ fun SettingsDebugPane(
                         scope.launch {
                             val podcasts = db.podcasts().allSync()
 
-                            podcasts.forEach {
-                                val episodes = db.podcastEpisodes().all(it.origin).first()
+                            podcasts.forEach { podcast ->
+                                val episodes = db.podcastEpisodes().all(podcast.origin).first()
 
                                 db.podcastEpisodes().delete(episodes.first().episode.id)
                                 db.podcastSubscriptions()
-                                    .storeCacheValues(it.origin, "", "", "")
+                                    .storeCacheValues(podcast.origin, "", "", "")
                             }
                         }
                     }

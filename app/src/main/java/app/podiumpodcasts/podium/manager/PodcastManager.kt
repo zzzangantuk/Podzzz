@@ -58,7 +58,7 @@ class PodcastManager(
         episodes.forEach { it.imageSeedColor = podcast.imageSeedColor }
 
         db.podcasts().insertAll(podcast)
-        db.podcastEpisodes()._insertAll(*episodes.toTypedArray())
+        db.podcastEpisodes().insertAll(*episodes.toTypedArray())
         episodes.forEach { db.podcastEpisodePlayStates().initState(it.id) }
 
         return AddPodcastResult.Created(

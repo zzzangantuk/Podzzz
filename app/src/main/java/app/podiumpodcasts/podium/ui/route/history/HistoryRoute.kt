@@ -1,7 +1,6 @@
 package app.podiumpodcasts.podium.ui.route.history
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -41,12 +40,12 @@ import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItem
 import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActionResult
 import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActions
 import app.podiumpodcasts.podium.ui.component.layout.InfoLayout
+import app.podiumpodcasts.podium.ui.component.layout.ListHeading
 import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerSpacer
 import app.podiumpodcasts.podium.ui.component.model.episode.PodcastEpisodeListItem
 import app.podiumpodcasts.podium.ui.formatPubDate
 import app.podiumpodcasts.podium.ui.helper.LocalDatabase
 import app.podiumpodcasts.podium.ui.helper.PagerScaffold
-import app.podiumpodcasts.podium.ui.theme.Typography
 import app.podiumpodcasts.podium.ui.vm.HistoryViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -54,7 +53,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun HistoryRoute(
     onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -94,9 +93,9 @@ fun HistoryRoute(
                 },
                 title = {
                     Text(stringResource(R.string.route_history))
-                }
+                },
             )
-        }
+        },
     ) { inset ->
         PagerScaffold(
             pager,
@@ -108,10 +107,10 @@ fun HistoryRoute(
                 ) {
                     Text(
                         text = stringResource(R.string.route_history_empty_text),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
-            }
+            },
         ) {
             LazyColumn(
                 Modifier
@@ -122,14 +121,14 @@ fun HistoryRoute(
                     else -> vm.lazyListState
                 },
                 contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
             ) {
                 pagerSection(
                     vm = vm,
                     scope = scope,
                     label = R.string.route_history_today,
                     pager = todayPager,
-                    onClickEpisode = onClickEpisode
+                    onClickEpisode = onClickEpisode,
                 )
 
                 pagerSection(
@@ -137,7 +136,7 @@ fun HistoryRoute(
                     scope = scope,
                     label = R.string.route_history_this_week,
                     pager = weekPager,
-                    onClickEpisode = onClickEpisode
+                    onClickEpisode = onClickEpisode,
                 )
 
                 pagerSection(
@@ -145,7 +144,7 @@ fun HistoryRoute(
                     scope = scope,
                     label = R.string.route_history_this_month,
                     pager = monthPager,
-                    onClickEpisode = onClickEpisode
+                    onClickEpisode = onClickEpisode,
                 )
 
                 pagerSection(
@@ -153,7 +152,7 @@ fun HistoryRoute(
                     scope = scope,
                     label = R.string.route_history_this_year,
                     pager = yearPager,
-                    onClickEpisode = onClickEpisode
+                    onClickEpisode = onClickEpisode,
                 )
 
                 pagerSection(
@@ -161,7 +160,7 @@ fun HistoryRoute(
                     scope = scope,
                     label = R.string.route_history_older,
                     pager = olderPager,
-                    onClickEpisode = onClickEpisode
+                    onClickEpisode = onClickEpisode,
                 )
 
                 item {
@@ -178,29 +177,23 @@ fun LazyListScope.pagerSection(
     scope: CoroutineScope,
     label: Int,
     pager: LazyPagingItems<PodcastHistoryBundle>,
-    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit
+    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
 ) {
-    if(pager.itemCount > 0) {
+    if (pager.itemCount > 0) {
         item(
-            key = "HEADER:$label"
+            key = "HEADER:$label",
         ) {
-            Box(
-                Modifier
-                    .padding(12.dp)
+            ListHeading(
+                modifier = Modifier
                     .padding(top = 16.dp)
-                    .animateItem()
-            ) {
-                Text(
-                    text = stringResource(label),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = Typography.titleMediumEmphasized
-                )
-            }
+                    .animateItem(),
+                heading = stringResource(label),
+            )
         }
 
         items(
             count = pager.itemCount,
-            key = pager.itemKey { it.history.id }
+            key = pager.itemKey { it.history.id },
         ) {
             val historyElement = pager[it] ?: return@items
 
@@ -218,7 +211,7 @@ fun LazyListScope.pagerSection(
                         message = elementDeleted,
                         onUndo = {
                             vm.insert(historyElement)
-                        }
+                        },
                     )
                 },
                 content = {
@@ -241,11 +234,9 @@ fun LazyListScope.pagerSection(
                         colors = ListItemDefaults.segmentedColors(
                             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                         ),
-
-                        onClick = {
-                            onClickEpisode(historyElement.episode)
-                        }
-                    )
+                    ) {
+                        onClickEpisode(historyElement.episode)
+                    }
                 },
             )
         }

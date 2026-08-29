@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.podiumpodcasts.podium.R
-import app.podiumpodcasts.podium.utils.sha256
-import java.io.File
 
 enum class PodcastEpisodeDownloadState(
     val value: Int,

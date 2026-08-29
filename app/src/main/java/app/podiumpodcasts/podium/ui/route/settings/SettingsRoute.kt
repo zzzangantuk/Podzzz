@@ -45,13 +45,14 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.podiumpodcasts.podium.GITHUB_LINK
 import app.podiumpodcasts.podium.KOFI_LINK
 import app.podiumpodcasts.podium.R
 import app.podiumpodcasts.podium.ui.component.common.BackButton
 import app.podiumpodcasts.podium.ui.component.common.ExperimentalBadge
-import app.podiumpodcasts.podium.ui.component.settings.SettingsHeader
+import app.podiumpodcasts.podium.ui.component.layout.ListHeading
 import app.podiumpodcasts.podium.ui.component.settings.SettingsListItem
 import app.podiumpodcasts.podium.ui.helper.LocalDatabase
 import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
@@ -123,18 +124,18 @@ fun SettingsRoute(
                 .fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
 
-            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
         ) {
             item {
-                SettingsHeader(
-                    label = stringResource(R.string.route_settings_about)
+                ListHeading(
+                    heading = stringResource(R.string.route_settings_about),
                 )
             }
 
             item {
                 val version = remember {
                     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-                    Pair(packageInfo.versionName, packageInfo.longVersionCode)
+                    Pair(packageInfo.versionName, PackageInfoCompat.getLongVersionCode(packageInfo))
                 }
 
                 SettingsListItem(

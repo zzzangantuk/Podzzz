@@ -19,8 +19,8 @@ import app.podiumpodcasts.podium.utils.rss.toPodcastEpisode
 import kotlinx.coroutines.launch
 
 interface AddPodcastState {
-    open class Idle() : AddPodcastState
-    open class Loading() : AddPodcastState
+    open class Idle : AddPodcastState
+    open class Loading : AddPodcastState
     open class Preview(
         val imageUrl: String,
         val podcast: PodcastModel,

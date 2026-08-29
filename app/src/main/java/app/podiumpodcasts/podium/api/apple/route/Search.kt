@@ -1,6 +1,6 @@
 package app.podiumpodcasts.podium.api.apple.route
 
-import android.net.Uri
+import androidx.core.net.toUri
 import app.podiumpodcasts.podium.api.apple.ApplePodcastClient
 import app.podiumpodcasts.podium.api.apple.model.top.SearchResponse
 import app.podiumpodcasts.podium.api.model.PodcastPreviewModel
@@ -9,14 +9,14 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 
 class Search(
-    val client: ApplePodcastClient
+    client: ApplePodcastClient,
 ) : ApiRoute(client) {
 
     suspend fun search(
         query: String,
         countryCode: String
     ): List<PodcastPreviewModel> {
-        val url = Uri.parse("https://itunes.apple.com/search?media=podcast")
+        val url = "https://itunes.apple.com/search?media=podcast".toUri()
             .buildUpon()
             .appendQueryParameter("country", countryCode)
             .appendQueryParameter("term", query)

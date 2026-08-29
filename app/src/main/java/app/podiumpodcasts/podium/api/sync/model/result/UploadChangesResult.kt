@@ -9,6 +9,7 @@ data class UploadChangesResult(
     @SerialName("update_urls")
     private val _updateUrls: List<List<String>> = listOf()
 ) {
+    @Suppress("unused")
     val updateUrls: Map<String, String>
         get() {
             return _updateUrls.associate { it[0] to it[1] }

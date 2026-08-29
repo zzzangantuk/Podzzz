@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.podiumpodcasts.podium.api.apple.ApplePodcastClient
 import app.podiumpodcasts.podium.api.db.AppDatabase
 import app.podiumpodcasts.podium.api.db.model.PodcastModel
 import app.podiumpodcasts.podium.api.model.PodcastPreviewModel
@@ -18,13 +17,11 @@ import coil3.compose.AsyncImagePainter
 import coil3.toBitmap
 import com.materialkolor.ktx.themeColorOrNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 interface PodcastPreviewState {
-    open class Idle() : PodcastPreviewState
-    open class Loading() : PodcastPreviewState
+    open class Idle : PodcastPreviewState
+    open class Loading : PodcastPreviewState
     open class Done(
         val podcast: PodcastModel
     ) : PodcastPreviewState

@@ -6,29 +6,28 @@ import app.podiumpodcasts.podium.SettingsRepository
 import app.podiumpodcasts.podium.api.db.AppDatabase
 import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeDownloadState
 import app.podiumpodcasts.podium.manager.DownloadManager
-import java.io.File
 
 class ProcessOrphanDownloadsWork(
     val context: Context,
     val db: AppDatabase,
-    val settingsRepository: SettingsRepository = SettingsRepository(context)
+    val settingsRepository: SettingsRepository = SettingsRepository(context),
 ) {
 
-    suspend fun doWork(): Boolean {
+    suspend fun doWork() {
         val existingFilePaths = mutableSetOf<String>()
 
         val all = db.podcastEpisodeDownloads().allRandomSync()
-        for(bundle in all) {
+        for (bundle in all) {
             val download = bundle.download
 
             val file = bundle.episode.craftDownloadFile(context)
 
-            if(file.exists()) {
+            if (file.exists()) {
                 existingFilePaths.add(file.canonicalPath)
-            } else if(download.state == PodcastEpisodeDownloadState.DOWNLOADED.value) {
+            } else if (download.state == PodcastEpisodeDownloadState.DOWNLOADED.value) {
                 Log.d(
                     "ProcessOrphanDownloadsWork",
-                    "Resetting download state of " + download.episodeId + " because download file doesn't exist (anymore) ..."
+                    "Resetting download state of " + download.episodeId + " because download file doesn't exist (anymore) ...",
                 )
 
                 // reset state if download file doesn't exist (anymore)
@@ -45,19 +44,17 @@ class ProcessOrphanDownloadsWork(
                 try {
                     Log.d(
                         "ProcessOrphanDownloadsWork",
-                        "Deleting orphaned file " + file.canonicalPath + "..."
+                        "Deleting orphaned file " + file.canonicalPath + "...",
                     )
                     file.delete()
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     Log.e(
                         "ProcessOrphanDownloadsWork",
-                        "Could not delete file " + file.canonicalPath + "."
+                        "Could not delete file " + file.canonicalPath + ".",
                     )
                     e.printStackTrace()
                 }
             }
-
-        return true
     }
 
 }

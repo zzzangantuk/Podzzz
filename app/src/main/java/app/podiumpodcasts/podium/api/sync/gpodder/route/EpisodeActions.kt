@@ -18,7 +18,7 @@ import io.ktor.http.takeFrom
 import kotlinx.serialization.json.encodeToJsonElement
 
 class EpisodeActions(
-    val client: GpodderClient
+    client: GpodderClient,
 ) : ApiRoute(client) {
 
     /**
