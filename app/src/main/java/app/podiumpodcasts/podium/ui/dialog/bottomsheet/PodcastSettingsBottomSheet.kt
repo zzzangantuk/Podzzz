@@ -3,7 +3,8 @@ package app.podiumpodcasts.podium.ui.dialog.bottomsheet
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import app.podiumpodcasts.podium.api.db.model.PodcastModel
@@ -18,8 +19,9 @@ fun PodcastSettingsBottomSheet(
 ) {
     val scope = rememberCoroutineScope()
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+    val sheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
     )
 
     ModalBottomSheet(

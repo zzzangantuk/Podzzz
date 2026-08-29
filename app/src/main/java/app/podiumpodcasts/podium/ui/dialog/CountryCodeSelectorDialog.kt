@@ -17,8 +17,9 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedListItem
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,7 +50,7 @@ fun CountryCodeSelectorDialog(
 ) {
     val scope = rememberCoroutineScope()
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden)
 
     val vm: CountryCodeSelectorViewModel = viewModel()
     val countries by vm.filteredCountries.collectAsState()
@@ -139,7 +140,7 @@ data class Country(
 
 internal class CountryCodeSelectorViewModel : ViewModel() {
     private val allCountries = Locale.getISOCountries().map { code ->
-        val locale = Locale("", code)
+        val locale = Locale.Builder().setRegion(code).build()
 
         Country(
             countryCode = code,

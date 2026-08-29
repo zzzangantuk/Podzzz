@@ -80,14 +80,14 @@ fun PodcastPreviewView(
     podcast: PodcastPreviewModel,
 
     onOpenPodcast: (podcast: PodcastModel) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val db = LocalDatabase.current
     val vm = remember { PodcastPreviewViewModel(db, podcast) }
 
     val expandedFab by remember { derivedStateOf { vm.listState.firstVisibleItemScrollOffset < 100 } }
 
-    val BACKDROP_SIZE = 200.dp
+    val backdropSize = 200.dp
 
     LaunchedEffect(vm.duplicate) {
         if(vm.duplicate == null) return@LaunchedEffect
@@ -149,7 +149,7 @@ fun PodcastPreviewView(
                                 ShimmerAsyncImage(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .height(inset.calculateTopPadding() + BACKDROP_SIZE)
+                                        .height(inset.calculateTopPadding() + backdropSize)
                                         .hazeEffect(),
 
                                     model = podcast.imageUrl,
@@ -168,7 +168,7 @@ fun PodcastPreviewView(
                                         Box(
                                             Modifier
                                                 .fillMaxWidth()
-                                                .height(inset.calculateTopPadding() + BACKDROP_SIZE)
+                                                .height(inset.calculateTopPadding() + backdropSize)
                                                 .background(
                                                     Brush.verticalGradient(
                                                         listOf(
@@ -185,7 +185,7 @@ fun PodcastPreviewView(
                                                     .shadow(
                                                         elevation = 8.dp,
                                                         shape = RoundedCornerShape(16.dp),
-                                                        clip = true
+                                                        clip = true,
                                                     ),
 
                                                 onState = { state ->
@@ -357,7 +357,7 @@ fun PodcastPreviewView(
             FilledTonalButton(
                 onClick = {
                     vm.showIgnoreSeedColorDialog = false
-                    vm.add(true)
+                    vm.add(force = true)
                 }
             ) {
                 Text(stringResource(R.string.common_action_continue))

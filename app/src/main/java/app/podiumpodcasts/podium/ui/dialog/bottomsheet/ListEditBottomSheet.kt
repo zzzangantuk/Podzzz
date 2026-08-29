@@ -14,9 +14,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +42,7 @@ class ListEditBottomSheetState {
     val shown = mutableStateOf(false)
 
     fun show(id: Int) {
-        listId.value = id
+        listId.intValue = id
         shown.value = true
     }
 
@@ -61,7 +62,7 @@ fun ListEditBottomSheet(
     val db = LocalDatabase.current
     val vm = remember { ListEditBottomSheetViewModel() }
 
-    val list = db.lists().get(state.listId.value)
+    val list = db.lists().get(state.listId.intValue)
         .collectAsState(null)
 
     LaunchedEffect(list.value) {
@@ -69,7 +70,7 @@ fun ListEditBottomSheet(
         vm.description.value = list.value?.description ?: ""
     }
 
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden)
 
     LaunchedEffect(vm.done.value) {
         if(!vm.done.value) return@LaunchedEffect
@@ -86,8 +87,8 @@ fun ListEditBottomSheet(
         ) {
             AnimatedContent(
                 targetState = vm.state.value
-            ) { _state ->
-                when(_state) {
+            ) { uiState ->
+                when(uiState) {
                     is ListEditBottomSheetUIState.Idle -> Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
@@ -143,7 +144,7 @@ fun ListEditBottomSheet(
                         Button(
                             modifier = Modifier.align(Alignment.End),
                             onClick = {
-                                vm.edit(db, state.listId.value)
+                                vm.edit(db, state.listId.intValue)
                             }
                         ) {
                             Text(stringResource(R.string.common_action_edit))
@@ -152,7 +153,7 @@ fun ListEditBottomSheet(
 
                     is ListEditBottomSheetUIState.Error -> {
                         ErrorLayout {
-                            Text(_state.reason)
+                            Text(uiState.reason)
                         }
                     }
                 }

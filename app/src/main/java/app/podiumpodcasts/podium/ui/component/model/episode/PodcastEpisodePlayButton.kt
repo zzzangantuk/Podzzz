@@ -1,7 +1,5 @@
 package app.podiumpodcasts.podium.ui.component.model.episode
 
-import android.util.Log
-import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,16 +9,15 @@ import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.PlayCircleOutline
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ToggleButtonColors
 import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.ToggleButtonElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import app.podiumpodcasts.podium.AppActivity
 import app.podiumpodcasts.podium.R
 import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeBundle
 import app.podiumpodcasts.podium.ui.component.button.StateDisplayingToggleButton
@@ -40,8 +37,8 @@ fun PodcastEpisodePlayButton(
     bundle: PodcastEpisodeBundle,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    colors: ToggleButtonColors = ToggleButtonDefaults.toggleButtonColors(),
-    elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
+    colors: ToggleButtonColors = ToggleButtonDefaults.colors(),
+    elevation: ToggleButtonElevation? = ToggleButtonDefaults.elevation(),
     border: BorderStroke? = null,
     contentPadding: PaddingValues = ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight),
     interactionSource: MutableInteractionSource? = null

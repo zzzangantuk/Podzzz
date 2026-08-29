@@ -5,7 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.TonalToggleButton
+import androidx.compose.material3.FilledTonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +28,7 @@ fun ContentSaveToListButton(
 
     val isSaved = db.listItems().exists(contentId).collectAsState(false)
 
-    TonalToggleButton(
+    FilledTonalToggleButton(
         checked = isSaved.value,
         onCheckedChange = {
             showBottomSheet.value = true

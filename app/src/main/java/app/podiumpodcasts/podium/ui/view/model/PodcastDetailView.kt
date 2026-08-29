@@ -133,7 +133,7 @@ import kotlinx.coroutines.launch
 enum class Destinations(
     val index: Int,
     @StringRes val label: Int,
-    val icon: ImageVector
+    val icon: ImageVector,
 ) {
     EPISODES(0, R.string.common_episodes, Icons.AutoMirrored.Filled.QueueMusic),
     INFO(1, R.string.common_info, Icons.Default.Info)
@@ -144,7 +144,7 @@ enum class Destinations(
 fun PodcastDetailView(
     podcast: PodcastModel,
     onBack: () -> Unit,
-    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit
+    onClickEpisode: (episode: PodcastEpisodeModel) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -162,19 +162,19 @@ fun PodcastDetailView(
     val enableNotifications = subscription.value?.enableNotifications == true
     val enableAutoDownload = subscription.value?.enableAutoDownload == true
 
-    val BACKDROP_SIZE = 200.dp
+    val backdropSize = 200.dp
 
     val isAtTop by remember {
         derivedStateOf { vm.lazyListState.firstVisibleItemIndex == 0 }
     }
 
     val showScrollUpButton by remember {
-        derivedStateOf { vm.lazyListState.firstVisibleItemIndex > 7 && vm.selectedDestination == Destinations.EPISODES }
+        derivedStateOf { (vm.lazyListState.firstVisibleItemIndex > 7) && (vm.selectedDestination == Destinations.EPISODES) }
     }
 
     PullToRefreshBox(
         isRefreshing = vm.isRefreshing,
-        onRefresh = { vm.updatePodcast(activity, podcast) }
+        onRefresh = { vm.updatePodcast(activity, podcast) },
     ) {
         BoxWithConstraints {
             Scaffold(
@@ -237,7 +237,7 @@ fun PodcastDetailView(
                         ShimmerAsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(inset.calculateTopPadding() + BACKDROP_SIZE)
+                                .height(inset.calculateTopPadding() + backdropSize)
                                 .hazeEffect(),
 
                             model = podcast.imageUrl,
@@ -259,7 +259,7 @@ fun PodcastDetailView(
                             Box(
                                 Modifier
                                     .fillMaxWidth()
-                                    .height(inset.calculateTopPadding() + BACKDROP_SIZE)
+                                    .height(inset.calculateTopPadding() + backdropSize)
                                     .background(
                                         Brush.verticalGradient(
                                             listOf(
@@ -361,7 +361,7 @@ fun PodcastDetailView(
                                             }
                                         },
 
-                                        colors = ToggleButtonDefaults.toggleButtonColors(
+                                        colors = ToggleButtonDefaults.colors(
                                             containerColor = MaterialTheme.colorScheme.surface
                                         )
                                     ) {
@@ -571,7 +571,7 @@ fun PodcastDetailView(
         onConfirm = {
             vm.deletePodcast()
             onBack()
-        }
+        },
     )
 }
 
@@ -609,7 +609,7 @@ fun LazyListScope.podcastDetailViewEpisodesDestination(
     item {
         val isSearchFilterOrderBarStateDefault by vm.searchFilterOrderBarState.isDefault()
 
-        if(episodePager.itemCount == 0 && episodePager.loadState.isIdle) InfoLayout(
+        if ((episodePager.itemCount == 0) && episodePager.loadState.isIdle) InfoLayout(
             modifier = Modifier
                 .heightIn(min = 200.dp)
                 .animateItem(),
@@ -671,7 +671,7 @@ fun LazyListScope.podcastDetailViewEpisodesDestination(
                                     message = markedAsPlayed,
                                     onUndo = {
                                         vm.markAsUnplayed(episodeBundle)
-                                    }
+                                    },
                                 )
                             }
                         ),

@@ -14,9 +14,10 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +32,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.podiumpodcasts.podium.R
 import app.podiumpodcasts.podium.ui.theme.Typography
 import app.podiumpodcasts.podium.ui.vm.MediaPlayerViewModel
-import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -44,7 +45,7 @@ fun MediaPlayerSpeedBottomSheet(
     LaunchedEffect(vm.speed) { speed = vm.speed }
 
     ModalBottomSheet(
-        sheetState = rememberModalBottomSheetState(),
+        sheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden),
         onDismissRequest = onDismiss
     ) {
         Column(
@@ -65,7 +66,7 @@ fun MediaPlayerSpeedBottomSheet(
                 Spacer(Modifier.width(16.dp))
 
                 Text(
-                    text = String.format(Locale.getDefault(), "%.2f", speed) + "x",
+                    text = String.format(LocalLocale.current.platformLocale, "%.2f", speed) + "x",
                     color = MaterialTheme.colorScheme.primary,
                     style = Typography.headlineMediumEmphasized
                 )

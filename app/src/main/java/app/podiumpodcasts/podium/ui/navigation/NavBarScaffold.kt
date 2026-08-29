@@ -2,7 +2,7 @@ package app.podiumpodcasts.podium.ui.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldState
@@ -17,7 +17,7 @@ import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
 @Composable
 fun NavBarScaffold(
     layoutType: NavigationSuiteType =
-        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo()),
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfoV2()),
     state: NavigationSuiteScaffoldState,
 
     currentNavKey: @Composable () -> NavKey,

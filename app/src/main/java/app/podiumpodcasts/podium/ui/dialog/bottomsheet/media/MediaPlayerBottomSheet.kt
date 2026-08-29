@@ -1,9 +1,7 @@
 package app.podiumpodcasts.podium.ui.dialog.bottomsheet.media
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +37,6 @@ import androidx.compose.material.icons.rounded.Replay30
 import androidx.compose.material.icons.rounded.Replay5
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -50,11 +47,12 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.IconButtonDefaults.IconButtonWidthOption
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -77,7 +75,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.podiumpodcasts.podium.R
 import app.podiumpodcasts.podium.ui.component.common.SwitchableDynamicMaterialExpressiveTheme
-import app.podiumpodcasts.podium.ui.custom.icons.Forward
+import app.podiumpodcasts.podium.ui.custom.icons.ForwardIcon
 import app.podiumpodcasts.podium.ui.dialog.ShimmerAsyncImage
 import app.podiumpodcasts.podium.ui.formatPlayerTime
 import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
@@ -86,42 +84,37 @@ import app.podiumpodcasts.podium.ui.vm.MediaPlayerViewModel
 import app.podiumpodcasts.podium.ui.vm.SourceTypeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Locale
+import androidx.compose.ui.platform.LocalConfiguration
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MediaPlayerBottomSheet(
     onOpenEpisode: (
         origin: String,
-        id: String
+        id: String,
     ) -> Unit,
     onDismiss: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val windowSizeClass = currentWindowAdaptiveInfoV2().windowSizeClass
 
     val compactLayout = !windowSizeClass.isHeightAtLeastBreakpoint(500)
 
     val settingsRepository = LocalSettingsRepository.current
     val vm = viewModel<MediaPlayerViewModel>()
 
-    val enableArtworkColors = settingsRepository.appearance.enableArtworkColors.collectAsState(true)
+    val enableArtworkColors = settingsRepository.appearance.enableArtworkColors.collectAsState(initial = true)
 
     var blockSliderUpdate by remember { mutableStateOf(false) }
 
     var sliderState by remember { mutableFloatStateOf(0f) }
 
-    val animateSliderState = remember { Animatable(0f) }
-    LaunchedEffect(animateSliderState.value) {
-        if(blockSliderUpdate) return@LaunchedEffect
-        sliderState = animateSliderState.value
-    }
-
     val progressState = vm.getProgressState()
-    LaunchedEffect(progressState.value) {
-        if(blockSliderUpdate) return@LaunchedEffect
-        animateSliderState.snapTo(sliderState)
-        animateSliderState.animateTo(progressState.value, tween(100))
+    LaunchedEffect(progressState.floatValue) {
+        if (!blockSliderUpdate) {
+            sliderState = progressState.floatValue
+        }
     }
 
     LaunchedEffect(vm.isPlayerVisible) {
@@ -135,8 +128,9 @@ fun MediaPlayerBottomSheet(
     var showSpeedBottomSheet by remember { mutableStateOf(false) }
     var showQueueBottomSheet by remember { mutableStateOf(false) }
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
+    val sheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded)
     )
 
     fun dismissGracefully(
@@ -306,7 +300,7 @@ fun MediaPlayerBottomSheet(
 
                                 // don't animate slider after seeking
                                 scope.launch {
-                                    delay(500)
+                                    delay(500.milliseconds)
                                     blockSliderUpdate = false
                                 }
                             }
@@ -334,101 +328,116 @@ fun MediaPlayerBottomSheet(
 
                         Spacer(Modifier.height(32.dp))
 
-                        ButtonGroup(
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Row(
-                                Modifier.padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                             ) {
-                                FilledTonalIconButton(
-                                    modifier = Modifier
-                                        .size(IconButtonDefaults.largeContainerSize()),
-                                    shapes = IconButtonDefaults.shapes(
-                                        shape = IconButtonDefaults.largeSquareShape,
-                                        pressedShape = IconButtonDefaults.largePressedShape
-                                    ),
-                                    onClick = {
-                                        vm.seekBack()
-                                    }
+                                Box(
+                                    modifier = Modifier.weight(1f),
+                                    contentAlignment = Alignment.CenterEnd
                                 ) {
-                                    Icon(
-                                        imageVector = when(vm.seekBackIncrement) {
-                                            5000L -> Icons.Rounded.Replay5
-                                            10000L -> Icons.Rounded.Replay10
-                                            30000L -> Icons.Rounded.Replay30
-                                            else -> Icons.Rounded.Replay
-                                        },
-                                        contentDescription = stringResource(R.string.common_action_seek_back),
-                                        modifier = Modifier.size(IconButtonDefaults.largeIconSize),
-                                    )
-                                }
-
-                                val targetSizeWidth by animateDpAsState(
-                                    targetValue = if(vm.isPlaying) {
-                                        IconButtonDefaults.largeContainerSize(IconButtonWidthOption.Uniform).width
-                                    } else {
-                                        IconButtonDefaults.largeContainerSize(IconButtonWidthOption.Wide).width
-                                    },
-                                    animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
-                                )
-
-                                FilledIconButton(
-                                    modifier = Modifier
-                                        .height(
-                                            IconButtonDefaults
-                                                .largeContainerSize(IconButtonWidthOption.Narrow)
-                                                .height
-                                        )
-                                        .width(targetSizeWidth),
-                                    shapes = IconButtonDefaults.shapes(
-                                        shape = IconButtonDefaults.largeSquareShape,
-                                        pressedShape = IconButtonDefaults.largePressedShape
-                                    ),
-                                    onClick = {
-                                        if(vm.isPlaying) {
-                                            vm.pause()
-                                        } else {
-                                            vm.play()
+                                    FilledTonalIconButton(
+                                        modifier = Modifier
+                                            .size(IconButtonDefaults.largeContainerSize()),
+                                        shapes = IconButtonDefaults.shapes(
+                                            shape = IconButtonDefaults.largeSquareShape,
+                                            pressedShape = IconButtonDefaults.largePressedShape
+                                        ),
+                                        onClick = {
+                                            vm.seekBack()
                                         }
-                                    }
-                                ) {
-                                    AnimatedContent(vm.isPlaying) {
+                                    ) {
                                         Icon(
-                                            imageVector = when(it) {
-                                                true -> Icons.Rounded.Pause
-                                                false -> Icons.Rounded.PlayArrow
+                                            imageVector = when (vm.seekBackIncrement) {
+                                                5000L -> Icons.Rounded.Replay5
+                                                10000L -> Icons.Rounded.Replay10
+                                                30000L -> Icons.Rounded.Replay30
+                                                else -> Icons.Rounded.Replay
                                             },
-                                            contentDescription = when(it) {
-                                                true -> stringResource(R.string.common_action_pause)
-                                                false -> stringResource(R.string.common_action_play)
-                                            },
+                                            contentDescription = stringResource(R.string.common_action_seek_back),
                                             modifier = Modifier.size(IconButtonDefaults.largeIconSize),
                                         )
                                     }
                                 }
 
-                                FilledTonalIconButton(
-                                    modifier = Modifier
-                                        .size(IconButtonDefaults.largeContainerSize()),
-                                    shapes = IconButtonDefaults.shapes(
-                                        shape = IconButtonDefaults.largeSquareShape,
-                                        pressedShape = IconButtonDefaults.largePressedShape
-                                    ),
-                                    onClick = {
-                                        vm.seekForward()
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = when(vm.seekForwardIncrement) {
-                                            5000L -> Icons.Rounded.Forward5
-                                            10000L -> Icons.Rounded.Forward10
-                                            30000L -> Icons.Rounded.Forward30
-                                            else -> Icons.Rounded.Forward
+                                    Box {
+                                    val targetSizeWidth by animateDpAsState(
+                                        targetValue = if (vm.playWhenReady) {
+                                            IconButtonDefaults.largeContainerSize(
+                                                IconButtonWidthOption.Uniform
+                                            ).width
+                                        } else {
+                                            IconButtonDefaults.largeContainerSize(
+                                                IconButtonWidthOption.Wide
+                                            ).width
                                         },
-                                        contentDescription = stringResource(R.string.common_action_seek_forward),
-                                        modifier = Modifier.size(IconButtonDefaults.largeIconSize),
+                                        animationSpec = MaterialTheme.motionScheme.defaultSpatialSpec()
                                     )
+
+                                    FilledIconButton(
+                                        modifier = Modifier
+                                            .height(
+                                                IconButtonDefaults
+                                                    .largeContainerSize(IconButtonWidthOption.Narrow)
+                                                    .height
+                                            )
+                                            .width(targetSizeWidth),
+                                        shapes = IconButtonDefaults.shapes(
+                                            shape = IconButtonDefaults.largeSquareShape,
+                                            pressedShape = IconButtonDefaults.largePressedShape
+                                        ),
+                                        onClick = {
+                                            if (vm.playWhenReady) {
+                                                vm.pause()
+                                            } else {
+                                                vm.play()
+                                            }
+                                        }
+                                    ) {
+                                        AnimatedContent(vm.playWhenReady) {
+                                            Icon(
+                                                imageVector = when (it) {
+                                                    true -> Icons.Rounded.Pause
+                                                    false -> Icons.Rounded.PlayArrow
+                                                },
+                                                contentDescription = when (it) {
+                                                    true -> stringResource(R.string.common_action_pause)
+                                                    false -> stringResource(R.string.common_action_play)
+                                                },
+                                                modifier = Modifier.size(IconButtonDefaults.largeIconSize),
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Box(
+                                    modifier = Modifier.weight(1f),
+                                    contentAlignment = Alignment.CenterStart
+                                ) {
+                                    FilledTonalIconButton(
+                                        modifier = Modifier
+                                            .size(IconButtonDefaults.largeContainerSize()),
+                                        shapes = IconButtonDefaults.shapes(
+                                            shape = IconButtonDefaults.largeSquareShape,
+                                            pressedShape = IconButtonDefaults.largePressedShape
+                                        ),
+                                        onClick = {
+                                            vm.seekForward()
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = when (vm.seekForwardIncrement) {
+                                                5000L -> Icons.Rounded.Forward5
+                                                10000L -> Icons.Rounded.Forward10
+                                                30000L -> Icons.Rounded.Forward30
+                                                else -> ForwardIcon
+                                            },
+                                            contentDescription = stringResource(R.string.common_action_seek_forward),
+                                            modifier = Modifier.size(IconButtonDefaults.largeIconSize),
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -513,11 +522,14 @@ fun MediaPlayerBottomSheet(
                                 Text(
                                     text = when(speed) {
                                         1f -> stringResource(R.string.common_playback_speed)
-                                        else -> String.format(
-                                            Locale.getDefault(),
-                                            "%.2f",
-                                            speed
-                                        ) + "x"
+                                        else -> {
+                                            val locale = LocalConfiguration.current.locales[0]
+                                            String.format(
+                                                locale,
+                                                "%.2f",
+                                                speed
+                                            ) + "x"
+                                        }
                                     },
                                     style = ButtonDefaults.textStyleFor(size)
                                 )
@@ -573,7 +585,7 @@ fun MediaPlayerBottomSheet(
             showQueueBottomSheet = false
         }
     }
-}
+
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable

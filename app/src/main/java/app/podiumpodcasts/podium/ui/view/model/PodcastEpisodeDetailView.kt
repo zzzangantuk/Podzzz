@@ -91,13 +91,13 @@ fun PodcastEpisodeDetailView(
     showParentLink: Boolean = false,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     onShowParent: () -> Unit = { },
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
 
     val episode = bundle.episode
 
-    val BACKDROP_SIZE = 200.dp
+    val backdropSize = 200.dp
 
     Scaffold(
         topBar = {
@@ -111,11 +111,11 @@ fun PodcastEpisodeDetailView(
                     if(showParentLink) FilledIconButton(
                         shapes = IconButtonDefaults.shapes(),
                         colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         ),
                         onClick = {
                             onShowParent()
-                        }
+                        },
                     ) {
                         ShimmerAsyncImage(
                             modifier = Modifier
@@ -140,7 +140,7 @@ fun PodcastEpisodeDetailView(
             ShimmerAsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(insets.calculateTopPadding() + BACKDROP_SIZE)
+                    .height(insets.calculateTopPadding() + backdropSize)
                     .hazeEffect(),
 
                 model = episode.imageUrl ?: parent?.imageUrl,
@@ -157,7 +157,7 @@ fun PodcastEpisodeDetailView(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .height(insets.calculateTopPadding() + BACKDROP_SIZE)
+                        .height(insets.calculateTopPadding() + backdropSize)
                         .background(
                             Brush.verticalGradient(
                                 listOf(
@@ -174,7 +174,7 @@ fun PodcastEpisodeDetailView(
                             .shadow(
                                 elevation = 8.dp,
                                 shape = RoundedCornerShape(16.dp),
-                                clip = true
+                                clip = true,
                             ),
 
                         model = episode.imageUrl ?: parent?.imageUrl,
@@ -187,7 +187,7 @@ fun PodcastEpisodeDetailView(
                 Column(
                     Modifier.padding(insets)
                 ) {
-                    Spacer(Modifier.height(BACKDROP_SIZE))
+                    Spacer(Modifier.height(backdropSize))
 
                     Column(
                         Modifier.background(backgroundColor)
@@ -250,7 +250,7 @@ fun PodcastEpisodeDetailView(
 
                             PodcastEpisodePlayButton(
                                 bundle = bundle,
-                                colors = ToggleButtonDefaults.toggleButtonColors(
+                                colors = ToggleButtonDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surface
                                 )
                             )
@@ -298,8 +298,8 @@ fun PodcastEpisodeDetailView(
                         Column(
                             Modifier.padding(16.dp)
                         ) {
-                            var canExpandDescription by remember { mutableStateOf(false) }
-                            var expandDescription by remember { mutableStateOf(false) }
+                            var canExpandDescription by remember { mutableStateOf(value = false) }
+                            var expandDescription by remember { mutableStateOf(value = false) }
 
                             Surface(
                                 modifier = Modifier
