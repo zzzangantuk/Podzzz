@@ -36,7 +36,7 @@ interface PodcastDao {
         WHERE title LIKE '%' || :query || '%' 
            OR description LIKE '%' || :query || '%' 
            OR author LIKE '%' || :query || '%'
-    """
+    """,
     )
     fun search(query: String): PagingSource<Int, PodcastModel>
 
@@ -57,15 +57,15 @@ interface PodcastDao {
 
     @Transaction
     suspend fun updateImageSeedColor(origin: String, imageSeedColor: Int) {
-        _updateImageSeedColor(origin, imageSeedColor)
-        _updateImageSeedColorForEpisodes(origin, imageSeedColor)
+        updatePodcastImageSeedColor(origin, imageSeedColor)
+        updateEpisodesImageSeedColor(origin, imageSeedColor)
     }
 
     @Query("UPDATE podcast SET imageSeedColor=:imageSeedColor WHERE origin=:origin")
-    suspend fun _updateImageSeedColor(origin: String, imageSeedColor: Int)
+    suspend fun updatePodcastImageSeedColor(origin: String, imageSeedColor: Int)
 
     @Query("UPDATE podcastEpisode SET imageSeedColor=:imageSeedColor WHERE origin=:origin")
-    suspend fun _updateImageSeedColorForEpisodes(origin: String, imageSeedColor: Int)
+    suspend fun updateEpisodesImageSeedColor(origin: String, imageSeedColor: Int)
 
     @Update
     suspend fun update(podcast: PodcastModel)

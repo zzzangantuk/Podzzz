@@ -40,7 +40,7 @@ import app.podiumpodcasts.podium.api.db.model.statistics.UpdatePodcastRunModel
         UpdatePodcastRunModel::class,
 
         SyncActionModel::class
-    ], version = 15
+    ], version = 16, exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun podcasts(): PodcastDao
@@ -200,10 +200,10 @@ val MIGRATION_10_11 = object : Migration(10, 11) {
 }
 
 val MIGRATION_11_12 = object : Migration(11, 12) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL("DROP TABLE IF EXISTS `listItem`")
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("DROP TABLE IF EXISTS `listItem`")
 
-        database.execSQL(
+        db.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `listItem` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
@@ -254,6 +254,14 @@ val MIGRATION_14_15 = object : Migration(14, 15) {
     }
 }
 
+val MIGRATION_15_16 = object : Migration(15, 16) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_podcastEpisode_origin` ON `podcastEpisode` (`origin`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_podcastHistory_episodeId` ON `podcastHistory` (`episodeId`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_listItem_listId` ON `listItem` (`listId`)")
+    }
+}
+
 val ALL_MIGRATIONS = arrayOf(
     MIGRATION_1_2,
     MIGRATION_2_3,
@@ -268,5 +276,6 @@ val ALL_MIGRATIONS = arrayOf(
     MIGRATION_11_12,
     MIGRATION_12_13,
     MIGRATION_13_14,
-    MIGRATION_14_15
+    MIGRATION_14_15,
+    MIGRATION_15_16
 )

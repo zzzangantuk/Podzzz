@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "listItem",
+    indices = [androidx.room.Index(value = ["listId"])],
     foreignKeys = [ForeignKey(
         entity = ListModel::class,
         parentColumns = arrayOf("id"),

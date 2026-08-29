@@ -17,7 +17,7 @@ import app.podiumpodcasts.podium.api.db.model.PodcastEpisodePlayStateModel
 import kotlinx.coroutines.flow.Flow
 
 enum class PodcastEpisodesOrder(
-    val value: String
+    val value: String,
 ) {
     ASCENDING("ASC"),
     DESCENDING("DESC")
@@ -47,6 +47,7 @@ interface PodcastEpisodeDao {
     @Query("SELECT * FROM podcastEpisode WHERE origin=:origin ORDER BY pubDate DESC")
     fun all(origin: String): Flow<List<PodcastEpisodeBundle>>
 
+    @Transaction
     @RawQuery(
         observedEntities = [
             PodcastEpisodeModel::class,
@@ -94,6 +95,7 @@ interface PodcastEpisodeDao {
     @Query("SELECT * FROM podcastEpisode WHERE origin=:origin ORDER BY pubDate DESC")
     suspend fun allSync(origin: String): List<PodcastEpisodeBundle>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisode WHERE origin=:origin ORDER BY pubDate DESC LIMIT :limit OFFSET :offset")
     suspend fun get(origin: String, limit: Int, offset: Int): List<PodcastEpisodeBundle>
 
@@ -101,21 +103,26 @@ interface PodcastEpisodeDao {
     @Query("SELECT * FROM podcastEpisode WHERE new=1 ORDER BY pubDate DESC")
     fun allNew(): PagingSource<Int, PodcastEpisodeBundle>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisode WHERE new=1 ORDER BY pubDate DESC LIMIT :limit OFFSET :offset")
     fun getNew(limit: Int, offset: Int): List<PodcastEpisodeBundle>
 
     @Query("SELECT id FROM podcastEpisode WHERE origin=:origin")
     suspend fun getEpisodeIds(origin: String): List<String>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisode WHERE id=:id")
     fun get(id: String): Flow<PodcastEpisodeBundle>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisode WHERE id=:id")
     suspend fun getSync(id: String): PodcastEpisodeBundle
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisode WHERE origin=:origin AND audioUrl=:audioUrl")
     suspend fun getSyncByOriginAndAudioUrl(origin: String, audioUrl: String): PodcastEpisodeBundle?
 
+    @Transaction
     @Query(
         """
         SELECT * FROM podcastEpisode 
@@ -130,16 +137,16 @@ interface PodcastEpisodeDao {
     suspend fun newAndUpdateNewEpisodesCount(
         origin: String, episodeId: String
     ) {
-        _new(episodeId)
-        _updateNewEpisodesCount(origin)
+        markAsNew(episodeId)
+        updateNewEpisodesCount(origin)
     }
 
     @Transaction
     suspend fun unnewAndUpdateNewEpisodesCount(
         origin: String, episodeId: String
     ) {
-        _unnew(episodeId)
-        _updateNewEpisodesCount(origin)
+        markAsNotNew(episodeId)
+        updateNewEpisodesCount(origin)
     }
 
     @Transaction
@@ -147,8 +154,8 @@ interface PodcastEpisodeDao {
         origin: String,
         vararg episodes: PodcastEpisodeModel
     ) {
-        _insertAll(*episodes)
-        _updateNewEpisodesCount(origin)
+        insertAll(*episodes)
+        updateNewEpisodesCount(origin)
     }
 
     @Update
@@ -158,13 +165,13 @@ interface PodcastEpisodeDao {
     suspend fun delete(id: String)
 
     @Insert
-    suspend fun _insertAll(vararg episodes: PodcastEpisodeModel)
+    suspend fun insertAll(vararg episodes: PodcastEpisodeModel)
 
     @Query("UPDATE podcastEpisode SET new=1 WHERE id=:id")
-    suspend fun _new(id: String)
+    suspend fun markAsNew(id: String)
 
     @Query("UPDATE podcastEpisode SET new=0 WHERE id=:id")
-    suspend fun _unnew(id: String)
+    suspend fun markAsNotNew(id: String)
 
     @Query(
         """
@@ -177,5 +184,5 @@ interface PodcastEpisodeDao {
         ) WHERE origin=:origin
     """
     )
-    suspend fun _updateNewEpisodesCount(origin: String)
+    suspend fun updateNewEpisodesCount(origin: String)
 }

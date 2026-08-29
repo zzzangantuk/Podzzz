@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ListItemDao {
 
+    @Transaction
     @Query("SELECT * FROM listItem WHERE listId = :listId ORDER BY position ASC")
     fun all(listId: Int): PagingSource<Int, ListItemModelBundle>
 
@@ -34,91 +35,93 @@ interface ListItemDao {
         listId: Int,
         contentId: String,
         isPodcast: Boolean,
-        position: Int
+        position: Int,
     ): Int {
-        val id = _addListItem(listId, contentId, isPodcast, position)
-        _refreshItemCount(listId)
+        val id = addListItem(listId, contentId, isPodcast, position)
+        refreshItemCount(listId)
 
-        if(position < 4) _updateCover(listId)
+        if(position < 4) updateCover(listId)
         return id.toInt()
     }
 
     @Transaction
     suspend fun deleteAndReindex(listId: Int, itemId: Int, deletedPosition: Int) {
-        _deleteById(itemId)
-        _shiftPositionsDown(listId, deletedPosition)
-        _refreshItemCount(listId)
+        deleteById(itemId)
+        shiftPositionsDown(listId, deletedPosition)
+        refreshItemCount(listId)
 
-        if(deletedPosition < 4) _updateCover(listId)
+        if(deletedPosition < 4) updateCover(listId)
     }
 
     @Transaction
     suspend fun moveAndReindex(listId: Int, itemId: Int, fromPos: Int, toPos: Int) {
         when(fromPos < toPos) {
-            true -> _shiftItemsUp(listId, fromPos, toPos)
-            false -> _shiftItemsDown(listId, toPos, fromPos)
+            true -> shiftItemsUp(listId, fromPos, toPos)
+            false -> shiftItemsDown(listId, toPos, fromPos)
         }
 
-        _updatePosition(itemId, toPos)
-        if(fromPos < 4 || toPos < 4) _updateCover(listId)
+        updatePosition(itemId, toPos)
+        if ((fromPos < 4) || (toPos < 4)) updateCover(listId)
     }
 
     @Query("SELECT MAX(position) + 1 FROM listItem WHERE listId = :listId")
     suspend fun getNextPosition(listId: Int): Int?
 
     @Query("INSERT INTO listItem (listId, contentId, isPodcast, position) VALUES (:listId, :contentId, :isPodcast, :position)")
-    suspend fun _addListItem(
+    suspend fun addListItem(
         listId: Int,
         contentId: String,
         isPodcast: Boolean,
-        position: Int
+        position: Int,
     ): Long
 
     @Query("DELETE FROM listItem WHERE id = :id")
-    suspend fun _deleteById(id: Int)
+    suspend fun deleteById(id: Int)
 
     @Query(
         """
         UPDATE listItem 
         SET position = position - 1 
         WHERE listId = :listId AND position > :deletedPosition
-    """
+    """,
     )
-    suspend fun _shiftPositionsDown(listId: Int, deletedPosition: Int)
+    suspend fun shiftPositionsDown(listId: Int, deletedPosition: Int)
 
     @Query("UPDATE listItem SET position = position - 1 WHERE listId = :listId AND position > :from AND position <= :to")
-    suspend fun _shiftItemsUp(listId: Int, from: Int, to: Int)
+    suspend fun shiftItemsUp(listId: Int, from: Int, to: Int)
 
     @Query("UPDATE listItem SET position = position + 1 WHERE listId = :listId AND position >= :to AND position < :from")
-    suspend fun _shiftItemsDown(listId: Int, to: Int, from: Int)
+    suspend fun shiftItemsDown(listId: Int, to: Int, from: Int)
 
     @Query("UPDATE listItem SET position = :newPos WHERE id = :itemId")
-    suspend fun _updatePosition(itemId: Int, newPos: Int)
+    suspend fun updatePosition(itemId: Int, newPos: Int)
 
     @Query(
         """
         UPDATE list 
         SET itemCount = (SELECT COUNT(*) FROM listItem WHERE listId = :listId) 
         WHERE id = :listId
-    """
+    """,
     )
-    suspend fun _refreshItemCount(listId: Int)
+    suspend fun refreshItemCount(listId: Int)
 
     @Transaction
-    suspend fun _updateCover(listId: Int) {
-        val coverItems = _getCoverItems(listId)
-        val imageUrls = coverItems.mapNotNull { (it.episode)?.imageUrl ?: it.podcast?.imageUrl }
+    suspend fun updateCover(listId: Int) {
+        val coverItems = getCoverItems(listId)
+        val imageUrls = coverItems.asSequence()
+            .mapNotNull { (it.episode)?.imageUrl ?: it.podcast?.imageUrl }
             .joinToString(separator = "\n")
-        _updateListImageUrls(listId, imageUrls)
+        updateListImageUrls(listId, imageUrls)
     }
 
     @Query("SELECT id FROM listItem WHERE listId = :listId AND position = :position LIMIT 1")
-    suspend fun _getItemIdAtPosition(listId: Int, position: Int): Int?
+    suspend fun getItemIdAtPosition(listId: Int, position: Int): Int?
 
+    @Transaction
     @Query("SELECT * FROM listItem WHERE listId = :listId ORDER BY position LIMIT 4")
-    suspend fun _getCoverItems(listId: Int): List<ListItemModelBundle>
+    suspend fun getCoverItems(listId: Int): List<ListItemModelBundle>
 
     @Query("UPDATE list SET imageUrls = :imageUrls WHERE id = :listId")
-    suspend fun _updateListImageUrls(listId: Int, imageUrls: String)
+    suspend fun updateListImageUrls(listId: Int, imageUrls: String)
 
 }

@@ -3,15 +3,18 @@ package app.podiumpodcasts.podium.api.db.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import app.podiumpodcasts.podium.api.db.model.PodcastSubscriptionBundle
 import app.podiumpodcasts.podium.api.db.model.PodcastSubscriptionModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PodcastSubscriptionDao {
+    @Transaction
     @Query("SELECT * FROM podcastSubscription ORDER BY newEpisodes DESC")
     fun allByNewEpisodes(): PagingSource<Int, PodcastSubscriptionBundle>
 
+    @Transaction
     @Query("SELECT * FROM podcastSubscription ORDER BY newEpisodes DESC LIMIT :limit OFFSET :offset")
     suspend fun getByNewEpisodes(limit: Int, offset: Int): List<PodcastSubscriptionBundle>
 
@@ -21,6 +24,7 @@ interface PodcastSubscriptionDao {
     @Query("SELECT * FROM podcastSubscription WHERE origin=:origin")
     suspend fun getSync(origin: String): PodcastSubscriptionModel?
 
+    @Transaction
     @Query("SELECT * FROM podcastSubscription ORDER BY lastUpdate ASC")
     suspend fun allSortedByLastUpdate(): List<PodcastSubscriptionBundle>
 

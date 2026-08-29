@@ -3,6 +3,7 @@ package app.podiumpodcasts.podium.api.db.dao
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import app.podiumpodcasts.podium.api.db.model.PodcastEpisodePlayStateBundle
 import app.podiumpodcasts.podium.api.db.model.PodcastEpisodePlayStateModel
 import app.podiumpodcasts.podium.api.db.model.PodcastPlayStateBundle
@@ -10,6 +11,7 @@ import app.podiumpodcasts.podium.api.db.model.PodcastPlayStateBundle
 @Dao
 interface PodcastEpisodePlayStateDao {
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisodePlayState WHERE state > 0 OR played != 0")
     suspend fun allSync(): List<PodcastEpisodePlayStateBundle>
 
@@ -38,10 +40,12 @@ interface PodcastEpisodePlayStateDao {
         lastUpdate: Long = System.currentTimeMillis() / 1000L
     )
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisodePlayState WHERE played=0 AND state>0 ORDER BY lastUpdate DESC")
     fun allContinuePlaying(): PagingSource<Int, PodcastPlayStateBundle>
 
-    @Query("SELECT * FROM podcastEpisodePlayState, podcastEpisode e WHERE played=0 AND state>0 AND episodeId=e.id ORDER BY pubDate DESC LIMIT :limit OFFSET :offset")
+    @Transaction
+    @Query("SELECT podcastEpisodePlayState.* FROM podcastEpisodePlayState, podcastEpisode e WHERE played=0 AND state>0 AND episodeId=e.id ORDER BY pubDate DESC LIMIT :limit OFFSET :offset")
     suspend fun getContinuePlayingSync(limit: Int, offset: Int): List<PodcastPlayStateBundle>
 
     @Query("SELECT * FROM podcastEpisodePlayState WHERE episodeId=:episodeId")

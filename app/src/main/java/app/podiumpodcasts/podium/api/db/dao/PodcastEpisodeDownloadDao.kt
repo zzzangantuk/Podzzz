@@ -19,18 +19,21 @@ interface PodcastEpisodeDownloadDao {
     @Query("SELECT d.* FROM podcastEpisodeDownload d, podcastEpisodePlayState p WHERE d.episodeId = p.episodeId AND p.played ORDER BY d.timestamp DESC")
     suspend fun allPlayedByTimestamp(): List<PodcastEpisodeDownloadBundle>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisodeDownload ORDER BY RANDOM()")
     suspend fun allRandomSync(): List<PodcastEpisodeDownloadBundle>
 
     @Query("SELECT * FROM podcastEpisodeDownload WHERE state != :downloadedStateValue")
     suspend fun allNotDownloadedSync(downloadedStateValue: Int = PodcastEpisodeDownloadState.DOWNLOADED.value): List<PodcastEpisodeDownloadModel>
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisodeDownload WHERE episodeId=:episodeId")
     fun get(episodeId: String): Flow<PodcastEpisodeDownloadBundle?>
 
     @Query("SELECT * FROM podcastEpisodeDownload WHERE episodeId=:episodeId")
     suspend fun getSync(episodeId: String): PodcastEpisodeDownloadModel?
 
+    @Transaction
     @Query("SELECT * FROM podcastEpisodeDownload WHERE timestamp<:timestamp")
     suspend fun getOlderThanSync(timestamp: Long): List<PodcastEpisodeDownloadBundle>
 
