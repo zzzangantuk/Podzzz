@@ -48,19 +48,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.podiumpodcasts.podium.R
 import app.podiumpodcasts.podium.api.db.model.PodcastModel
 import app.podiumpodcasts.podium.ui.component.common.BackButton
-import app.podiumpodcasts.podium.ui.component.settings.SettingsHeader
+import app.podiumpodcasts.podium.ui.component.layout.ListHeading
 import app.podiumpodcasts.podium.ui.component.settings.SettingsListItem
 import app.podiumpodcasts.podium.ui.component.settings.SettingsSecondsSliderListItem
 import app.podiumpodcasts.podium.ui.component.settings.SettingsSwitchListItem
 import app.podiumpodcasts.podium.ui.helper.LocalDatabase
 import app.podiumpodcasts.podium.ui.vm.PodcastSettingsViewModel
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PodcastSettingsView(
     podcast: PodcastModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     val db = LocalDatabase.current
 
@@ -79,14 +80,14 @@ fun PodcastSettingsView(
                 navigationIcon = {
                     BackButton(
                         icon = Icons.Rounded.Close,
-                        onClick = onBack
+                        onClick = onBack,
                     )
                 },
                 title = {
                     Text(
                         text = stringResource(R.string.route_podcast_settings),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             )
@@ -101,8 +102,8 @@ fun PodcastSettingsView(
         ) {
             subscription.value?.let { subscription ->
                 item {
-                    SettingsHeader(
-                        label = stringResource(R.string.view_podcast_settings_details)
+                    ListHeading(
+                        heading = stringResource(R.string.view_podcast_settings_details),
                     )
                 }
 
@@ -115,7 +116,7 @@ fun PodcastSettingsView(
                     val isSame = overrideTitle.value == podcast.title
 
                     LaunchedEffect(overrideTitle.value) {
-                        delay(1500)
+                        delay(1500.milliseconds)
                         vm.setOverrideTitle(
                             db, podcast, when(isSame) {
                                 true -> ""
@@ -140,10 +141,10 @@ fun PodcastSettingsView(
                                 Spacer(Modifier.height(16.dp))
 
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     TextField(
-                                        modifier = Modifier.weight(1f, true),
+                                        modifier = Modifier.weight(1f, fill = true),
 
                                         value = overrideTitle.value,
                                         onValueChange = {
@@ -172,10 +173,8 @@ fun PodcastSettingsView(
                         },
 
                         index = 0,
-                        count = 1,
-
-                        onClick = { }
-                    )
+                        count = 1
+                    ) { }
                 }
 
                 item {
@@ -183,8 +182,8 @@ fun PodcastSettingsView(
                 }
 
                 item {
-                    SettingsHeader(
-                        label = stringResource(R.string.view_podcast_settings_subscription)
+                    ListHeading(
+                        heading = stringResource(R.string.view_podcast_settings_subscription),
                     )
                 }
 
@@ -236,14 +235,14 @@ fun PodcastSettingsView(
             }
 
             item {
-                SettingsHeader(
-                    label = stringResource(R.string.view_podcast_settings_playback)
+                ListHeading(
+                    heading = stringResource(R.string.view_podcast_settings_playback),
                 )
             }
 
             item {
                 val seconds = remember { mutableIntStateOf(podcast.skipBeginning) }
-                LaunchedEffect(podcast.skipBeginning) { seconds.value = podcast.skipBeginning }
+                LaunchedEffect(podcast.skipBeginning) { seconds.intValue = podcast.skipBeginning }
 
                 SettingsSecondsSliderListItem(
                     icon = {
@@ -254,13 +253,13 @@ fun PodcastSettingsView(
                     },
                     label = stringResource(R.string.view_podcast_settings_playback_skip_begin_of_show),
 
-                    value = seconds.value,
-                    onValueChange = { seconds.value = it },
+                    value = seconds.intValue,
+                    onValueChange = { seconds.intValue = it },
 
                     max = 180,
 
                     onValueChangeFinished = {
-                        vm.setSkipBeginning(db, podcast, seconds.value)
+                        vm.setSkipBeginning(db, podcast, seconds.intValue)
                     },
 
                     index = 0,
@@ -270,7 +269,7 @@ fun PodcastSettingsView(
 
             item {
                 val seconds = remember { mutableIntStateOf(0) }
-                LaunchedEffect(podcast.skipEnding) { seconds.value = podcast.skipEnding }
+                LaunchedEffect(podcast.skipEnding) { seconds.intValue = podcast.skipEnding }
 
                 SettingsSecondsSliderListItem(
                     icon = {
@@ -281,13 +280,13 @@ fun PodcastSettingsView(
                     },
                     label = stringResource(R.string.view_podcast_settings_playback_skp_end_of_show),
 
-                    value = seconds.value,
-                    onValueChange = { seconds.value = it },
+                    value = seconds.intValue,
+                    onValueChange = { seconds.intValue = it },
 
                     max = 180,
 
                     onValueChangeFinished = {
-                        vm.setSkipEnding(db, podcast, seconds.value)
+                        vm.setSkipEnding(db, podcast, seconds.intValue)
                     },
 
                     index = 1,

@@ -1,21 +1,19 @@
 package app.podiumpodcasts.podium.background.work
 
 import android.content.Context
-import android.util.Log
-import androidx.compose.runtime.currentRecomposeScope
 import app.podiumpodcasts.podium.api.db.AppDatabase
 import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeDownloadState
 import app.podiumpodcasts.podium.api.download.HttpDownloadClient
 import app.podiumpodcasts.podium.api.download.HttpDownloadClientResult
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.milliseconds
 
 class PodcastEpisodeDownloadWork(
     val context: Context,
     val db: AppDatabase,
-    val httpDownloadClient: HttpDownloadClient = HttpDownloadClient()
+    val httpDownloadClient: HttpDownloadClient = HttpDownloadClient(),
 ) {
 
     val progressUpdateDelay = 250L
@@ -30,7 +28,7 @@ class PodcastEpisodeDownloadWork(
         if(bundle.download == null)
             return false
 
-        delay(1000)
+        delay(1000.milliseconds)
 
         db.podcastEpisodeDownloads()
             .setState(episodeId, PodcastEpisodeDownloadState.DOWNLOADING.value)
@@ -42,10 +40,10 @@ class PodcastEpisodeDownloadWork(
                 url = episode.audioUrl,
                 output = file,
                 onProgress = { progress, total ->
-                    if(total == 0L) return@download
+                    if (total == 0L) return@download
 
                     val currentTime = System.currentTimeMillis()
-                    if(currentTime - lastProgressUpdate < progressUpdateDelay) return@download
+                    if ((currentTime - lastProgressUpdate) < progressUpdateDelay) return@download
 
                     lastProgressUpdate = currentTime
 

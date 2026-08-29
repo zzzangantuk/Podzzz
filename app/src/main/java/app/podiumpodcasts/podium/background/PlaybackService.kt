@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
+import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
@@ -106,7 +107,7 @@ class PlaybackService : MediaLibraryService() {
             settingsRepository.behavior.playerPlaybackSpeed.first()
         }
 
-        val player = ExoPlayer.Builder(this)
+        val exoPlayer = ExoPlayer.Builder(this)
             .setSeekBackIncrementMs(seekBackIncrement)
             .setSeekForwardIncrementMs(seekForwardIncrement)
             .setAudioAttributes(
@@ -119,12 +120,22 @@ class PlaybackService : MediaLibraryService() {
             .setHandleAudioBecomingNoisy(true)
             .build()
 
-        player.setPlaybackSpeed(playbackSpeed)
+        exoPlayer.setPlaybackSpeed(playbackSpeed)
+
+        val player: Player = object : ForwardingPlayer(exoPlayer) {
+            override fun seekToNext() {
+                seekForward()
+            }
+
+            override fun seekToPrevious() {
+                seekBack()
+            }
+        }
 
         mediaSession = MediaLibrarySession.Builder(this, player, MediaLibrarySessionCallback(this))
-            .setMediaButtonPreferences(buildMediaButtons(player))
+            .setMediaButtonPreferences(buildMediaButtons(exoPlayer))
             .setSessionActivity(
-                DeepLink.OpenMediaPlayer()
+                DeepLink.OpenMediaPlayer
                     .asPendingIntent(this, 42)!!
             )
             .build()

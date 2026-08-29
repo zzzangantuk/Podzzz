@@ -36,6 +36,7 @@ import app.podiumpodcasts.podium.utils.isDownload
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 interface SourceTypeState {
     object Unknown : SourceTypeState
@@ -52,6 +53,7 @@ class MediaPlayerViewModel : ViewModel() {
     var isPlayerVisible by mutableStateOf(false)
 
     var isPlaying by mutableStateOf(false)
+    var playWhenReady by mutableStateOf(false)
     var isLoading by mutableStateOf(false)
     var playbackState by mutableIntStateOf(1)
 
@@ -208,9 +210,9 @@ class MediaPlayerViewModel : ViewModel() {
                     currentPosition
                 }
 
-                progressState.value = realCurrentPosition.toFloat() / currentDuration
+                progressState.floatValue = realCurrentPosition.toFloat() / currentDuration
 
-                delay(100)
+                delay(16.milliseconds)
             }
         }
 
@@ -231,7 +233,7 @@ class MediaPlayerViewModel : ViewModel() {
                     ((diff / 1000L) / 60f).roundToInt()
                 }
 
-                delay(1000 * 30)
+                delay((1000 * 30).milliseconds)
             }
         }
 
@@ -270,6 +272,11 @@ class MediaPlayerViewModel : ViewModel() {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             this@MediaPlayerViewModel.isPlaying = isPlaying
             super.onIsPlayingChanged(isPlaying)
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            this@MediaPlayerViewModel.playWhenReady = playWhenReady
+            super.onPlayWhenReadyChanged(playWhenReady, reason)
         }
 
         override fun onEvents(player: Player, events: Player.Events) {
@@ -328,6 +335,7 @@ class MediaPlayerViewModel : ViewModel() {
         this@MediaPlayerViewModel.mediaController = mediaController
 
         this@MediaPlayerViewModel.isPlaying = mediaController.isPlaying
+        this@MediaPlayerViewModel.playWhenReady = mediaController.playWhenReady
 
         this@MediaPlayerViewModel.currentDuration = mediaController.duration.coerceAtLeast(1L)
         this@MediaPlayerViewModel.currentPosition = mediaController.currentPosition

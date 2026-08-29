@@ -9,6 +9,7 @@ import app.podiumpodcasts.podium.api.db.model.PodcastModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class MainViewModel(
     val db: AppDatabase,
@@ -21,7 +22,7 @@ class MainViewModel(
 
     init {
         viewModelScope.launch {
-            delay(500)
+            delay(500.milliseconds)
             showMediaPlayerBottomSheet.value = defaultShowMediaPlayerBottomSheet
         }
     }

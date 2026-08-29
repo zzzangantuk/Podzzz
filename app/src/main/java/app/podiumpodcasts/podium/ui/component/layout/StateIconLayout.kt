@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import app.podiumpodcasts.podium.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -40,7 +41,7 @@ fun StateIconLayout(
     ) {
         LaunchedEffect(Unit) {
             scope.launch {
-                delay(500)
+                delay(500.milliseconds)
                 timeout()
             }
         }

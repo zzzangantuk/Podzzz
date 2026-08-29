@@ -15,6 +15,7 @@ import app.podiumpodcasts.podium.background.worker.sync.FullSynchronizationWorke
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 interface LoginState {
     object Idle : LoginState
@@ -95,7 +96,7 @@ class SettingsSynchronizationViewModel(
                     attempts++
 
                     try {
-                        delay(1500)
+                        delay(1500.milliseconds)
 
                         val pollResult = client.auth.poll(result.result.poll)
                         if(pollResult.result is PollResult.Successful) {

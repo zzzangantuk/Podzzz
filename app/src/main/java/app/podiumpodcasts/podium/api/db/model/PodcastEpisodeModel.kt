@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.session.legacy.MediaDescriptionCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -23,12 +22,11 @@ enum class MediaMetadataExtra {
     IMAGE_SEED_COLOR,
     RESUME_AT,
     IS_DOWNLOAD,
-    SKIP_BEGINNING,
-    SKIP_ENDING
 }
 
 @Entity(
     tableName = "podcastEpisode",
+    indices = [androidx.room.Index(value = ["origin"])],
     foreignKeys = [ForeignKey(
         entity = PodcastModel::class,
         parentColumns = arrayOf("origin"),
@@ -83,7 +81,11 @@ data class PodcastEpisodeModel(
                     .setArtist(podcastTitle)
                     .setSubtitle(podcastTitle)
                     .setDisplayTitle(title)
-                    .setArtworkUri((imageUrl ?: "").toUri())
+                    .apply {
+                        if (!imageUrl.isNullOrBlank()) {
+                            setArtworkUri(imageUrl?.toUri())
+                        }
+                    }
                     .setExtras(
                         Bundle().apply {
                             putString(MediaMetadataExtra.ORIGIN.name, origin)
@@ -91,16 +93,16 @@ data class PodcastEpisodeModel(
                             putString(MediaMetadataExtra.AUDIO_URL.name, audioUrl)
                             putInt(MediaMetadataExtra.IMAGE_SEED_COLOR.name, imageSeedColor)
                             putBoolean(MediaMetadataExtra.IS_DOWNLOAD.name, isDownload)
-                            if(playState != null) putLong(
+                            
+                            if (playState != null) putLong(
                                 MediaMetadataExtra.RESUME_AT.name,
                                 playState.state * 1000L
                             )
 
+                            // Using literal string to bypass restricted Media3 legacy API
                             putLong(
-                                MediaDescriptionCompat.EXTRA_DOWNLOAD_STATUS, when(isDownload) {
-                                    true -> MediaDescriptionCompat.STATUS_DOWNLOADED
-                                    false -> MediaDescriptionCompat.STATUS_NOT_DOWNLOADED
-                                }
+                                "android.media.utils.EXTRA_DOWNLOAD_STATUS",
+                                if (isDownload) 2L else 0L
                             )
                         }
                     )
@@ -109,12 +111,8 @@ data class PodcastEpisodeModel(
                     .setIsPlayable(true)
                     .build()
             )
-            .setUri(
-                when(downloadFile.exists()) {
-                    true -> Uri.fromFile(downloadFile)
-                    false -> Uri.parse(audioUrl)
-                }
-            ).build()
+            .setUri(if (isDownload) Uri.fromFile(downloadFile) else audioUrl.toUri())
+            .build()
     }
 
     fun craftDownloadFile(
@@ -122,7 +120,6 @@ data class PodcastEpisodeModel(
     ): File {
         val podcastDownloadsDir =
             File(DownloadManager.getDownloadsDirectory(context), origin.sha256())
-        podcastDownloadsDir.mkdirs()
         return File(podcastDownloadsDir, audioUrl.sha256())
     }
 }

@@ -15,7 +15,7 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.VerticalDragHandle
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
 import androidx.compose.material3.adaptive.layout.PaneExpansionAnchor
@@ -44,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
+import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeModel
 import app.podiumpodcasts.podium.ui.component.common.SwitchableDynamicMaterialExpressiveTheme
 import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayer
 import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerHeight
@@ -53,6 +54,7 @@ import app.podiumpodcasts.podium.ui.dialog.bottomsheet.media.MediaPlayerBottomSh
 import app.podiumpodcasts.podium.ui.helper.LocalDatabase
 import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
 import app.podiumpodcasts.podium.ui.navigation.Home
+import app.podiumpodcasts.podium.ui.navigation.NavBarItems
 import app.podiumpodcasts.podium.ui.navigation.NavBarScaffold
 import app.podiumpodcasts.podium.ui.navigation.Navigation
 import app.podiumpodcasts.podium.ui.navigation.PodiumNavKey
@@ -65,25 +67,29 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
 @Parcelize
 open class DetailPaneKey : Parcelable {
     @Serializable
+    @Parcelize
     open class PodcastKey(
-        val origin: String
+        val origin: String,
     ) : DetailPaneKey()
 
     @Serializable
+    @Parcelize
     class PodcastEpisodeKey(
         val episodeOrigin: String,
-        val episodeId: String
+        val episodeId: String,
     ) : PodcastKey(episodeOrigin)
 
     @Serializable
+    @Parcelize
     class EpisodeKey(
         val episodeOrigin: String,
-        val episodeId: String
+        val episodeId: String,
     ) : DetailPaneKey()
 }
 
@@ -96,11 +102,11 @@ val exitSpec = fadeOut(animationSpec = tween(90))
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(
     ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class,
 )
 @Composable
 fun Main(
-    deepLink: DeepLink?
+    deepLink: DeepLink?,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -108,23 +114,29 @@ fun Main(
     val vm = viewModel(key = "MAIN") {
         MainViewModel(
             db = db,
-            defaultShowMediaPlayerBottomSheet = false
+            defaultShowMediaPlayerBottomSheet = false,
         )
     }
 
-    val backStack = rememberNavBackStack(deepLink?.route ?: Home)
+    val backStack = rememberNavBackStack(Home) // Home is the baseline
 
+// Then handle the deep link separately in a LaunchedEffect
+    LaunchedEffect(deepLink) {
+        if ((deepLink?.route != null) && (deepLink.route != Home)) {
+            backStack.add(deepLink.route)
+        }
+    }
     val listDetailNavigator = rememberListDetailPaneScaffoldNavigator<DetailPaneKey>()
 
     val navigationScaffoldState = rememberNavigationSuiteScaffoldState()
     val navigationScaffoldLayoutType =
-        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfoV2())
 
     fun listDetailBack() {
         scope.launch {
             if(!listDetailNavigator.canNavigateBack(BackNavigationBehavior.PopUntilScaffoldValueChange)) return@launch
             listDetailNavigator.navigateBack(
-                BackNavigationBehavior.PopUntilScaffoldValueChange
+                BackNavigationBehavior.PopUntilScaffoldValueChange,
             )
         }
     }
@@ -134,7 +146,7 @@ fun Main(
             listDetailNavigator.navigateTo(ThreePaneScaffoldRole.Primary, deepLink.detailPaneKey)
 
         if(deepLink?.showMediaPlayerBottomSheet == true) {
-            delay(500)
+            delay(500.milliseconds)
             vm.showMediaPlayerBottomSheet.value = true
         }
     }
@@ -147,7 +159,7 @@ fun Main(
             vm.hideFloatingMediaPlayer.value = !entry.showMediaPlayer
 
             val shouldNavBeVisible =
-                entry.showNavBar && listDetailNavigator.scaffoldValue.primary == PaneAdaptedValue.Hidden
+                entry.showNavBar && (listDetailNavigator.scaffoldValue.primary == PaneAdaptedValue.Hidden)
 
             val isNavVisible =
                 navigationScaffoldState.currentValue == NavigationSuiteScaffoldValue.Visible
@@ -161,17 +173,21 @@ fun Main(
         }
     }
 
-    val floatingMediaPlayerShown = remember { mutableStateOf(false) }
+    val floatingMediaPlayerShown = remember { mutableStateOf(value = false) }
     val floatingMediaPlayerHeightAnimation = remember { Animatable(0f) }
+
+    val onNavigationItemClick: (NavBarItems) -> Unit = remember(backStack, listDetailNavigator) {
+        {
+            backStack.add(it.navKey)
+            listDetailBack()
+        }
+    }
 
     NavBarScaffold(
         layoutType = navigationScaffoldLayoutType,
         state = navigationScaffoldState,
-        onClickItem = {
-            backStack.add(it.navKey)
-            listDetailBack()
-        },
-        currentNavKey = { backStack.last() }
+        onClickItem = onNavigationItemClick,
+        currentNavKey = { backStack.last() },
     ) {
         Scaffold(
             floatingActionButton = {
@@ -183,84 +199,98 @@ fun Main(
 
                         scope.launch {
                             floatingMediaPlayerHeightAnimation.animateTo(
-                                if(it)
+                                if (it)
                                     1f
                                 else
-                                    0f
+                                    0f,
                             )
                         }
                     },
-                    onClick = {
-                        vm.showMediaPlayerBottomSheet.value = true
-                    }
-                )
+                ) {
+                    vm.showMediaPlayerBottomSheet.value = true
+                }
             }
         ) {
             CompositionLocalProvider(
-                LocalFloatingMediaPlayerHeight provides (FloatingMediaPlayerHeight + 16.dp)
-                        * floatingMediaPlayerHeightAnimation.value,
+                LocalFloatingMediaPlayerHeight provides ((FloatingMediaPlayerHeight + 16.dp)
+                        * floatingMediaPlayerHeightAnimation.value),
                 LocalFloatingMediaPlayerShown provides floatingMediaPlayerShown.value
             ) {
                 NavigableListDetailPaneScaffold(
                     defaultBackBehavior = BackNavigationBehavior.PopLatest,
                     navigator = listDetailNavigator,
                     listPane = {
-                        AnimatedPane(
-                            enterTransition = enterSpec,
-                            exitTransition = exitSpec
-                        ) {
-                            Navigation(
-                                backStack = backStack,
+                        val onOpenPane: (DetailPaneKey) -> Unit = remember {
+                            {
+                                scope.launch {
+                                    listDetailNavigator.navigateTo(
+                                        pane = ThreePaneScaffoldRole.Primary,
+                                        contentKey = it
+                                    )
+                                }
+                            }
+                        }
 
-                                onOpenPane = {
+                        val onClosePane: () -> Unit = remember {
+                            {
+                                if (listDetailNavigator.canNavigateBack(BackNavigationBehavior.PopUntilScaffoldValueChange)) {
                                     scope.launch {
-                                        listDetailNavigator.navigateTo(
-                                            pane = ThreePaneScaffoldRole.Primary,
-                                            contentKey = it
-                                        )
-                                    }
-                                },
-                                onClosePane = {
-                                    if(listDetailNavigator.canNavigateBack(BackNavigationBehavior.PopUntilScaffoldValueChange)) {
-                                        scope.launch {
-                                            listDetailNavigator.navigateBack(
-                                                BackNavigationBehavior.PopUntilScaffoldValueChange
-                                            )
-                                        }
-                                    }
-                                },
-
-                                onBack = {
-                                    if(listDetailNavigator.canNavigateBack(BackNavigationBehavior.PopUntilScaffoldValueChange)) {
-                                        listDetailBack()
-                                    } else {
-                                        backStack.removeLastOrNull()
-                                    }
-                                },
-
-                                onClickPodcast = { origin ->
-                                    scope.launch {
-                                        listDetailNavigator.navigateTo(
-                                            pane = ThreePaneScaffoldRole.Primary,
-                                            contentKey = DetailPaneKey.PodcastKey(
-                                                origin = origin
-                                            )
-                                        )
-                                    }
-                                },
-                                onClickEpisode = { episode ->
-                                    scope.launch {
-                                        listDetailNavigator.navigateTo(
-                                            pane = ThreePaneScaffoldRole.Primary,
-                                            contentKey = DetailPaneKey.EpisodeKey(
-                                                episodeOrigin = episode.origin,
-                                                episodeId = episode.id
-                                            )
+                                        listDetailNavigator.navigateBack(
+                                            BackNavigationBehavior.PopUntilScaffoldValueChange
                                         )
                                     }
                                 }
-                            )
+                            }
                         }
+
+                        val onBack: () -> Unit = remember {
+                            {
+                                if (listDetailNavigator.canNavigateBack(BackNavigationBehavior.PopUntilScaffoldValueChange)) {
+                                    listDetailBack()
+                                } else {
+                                    backStack.removeLastOrNull()
+                                }
+                            }
+                        }
+
+                        val onClickPodcast: (String) -> Unit = remember {
+                            { origin ->
+                                scope.launch {
+                                    listDetailNavigator.navigateTo(
+                                        pane = ThreePaneScaffoldRole.Primary,
+                                        contentKey = DetailPaneKey.PodcastKey(
+                                            origin = origin
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        val onClickEpisode: (PodcastEpisodeModel) -> Unit = remember {
+                            { episode ->
+                                scope.launch {
+                                    listDetailNavigator.navigateTo(
+                                        pane = ThreePaneScaffoldRole.Primary,
+                                        contentKey = DetailPaneKey.EpisodeKey(
+                                            episodeOrigin = episode.origin,
+                                            episodeId = episode.id
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        Navigation(
+                            backStack = backStack,
+
+                            onOpenPane = onOpenPane,
+                            onClosePane = onClosePane,
+
+                            onBack = onBack,
+
+                            onClickPodcast = onClickPodcast,
+                            onClickEpisode = onClickEpisode
+                        )
                     },
                     detailPane = {
                         DetailPane(
@@ -293,7 +323,7 @@ fun Main(
             }
         }
 
-        if(vm.showMediaPlayerBottomSheet.value) MediaPlayerBottomSheet(
+        if (vm.showMediaPlayerBottomSheet.value) MediaPlayerBottomSheet(
             onOpenEpisode = { origin, id ->
                 vm.showMediaPlayerBottomSheet.value = false
 
@@ -307,14 +337,15 @@ fun Main(
                     )
                 }
             },
-            onDismiss = { vm.showMediaPlayerBottomSheet.value = false }
-        )
+        ) {
+            vm.showMediaPlayerBottomSheet.value = false
+        }
     }
 }
 
 @OptIn(
     ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3ExpressiveApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class,
 )
 @Composable
 private fun ThreePaneScaffoldPaneScope.DetailPane(
@@ -325,7 +356,7 @@ private fun ThreePaneScaffoldPaneScope.DetailPane(
     val settingsRepository = LocalSettingsRepository.current
 
     val enableArtworkColors = settingsRepository.appearance.enableArtworkColors
-        .collectAsState(true)
+        .collectAsState(initial = true)
 
     val scope = rememberCoroutineScope()
 
@@ -363,7 +394,7 @@ private fun ThreePaneScaffoldPaneScope.DetailPane(
                             enable = enableArtworkColors.value,
                             seedColor = Color(podcast.imageSeedColor)
                         ) {
-                            val displayBundle = remember { mutableStateOf(false) }
+                            val displayBundle = remember { mutableStateOf(value = false) }
                             val episodeId = remember { mutableStateOf<String?>(null) }
 
                             val bundle = episodeId.value?.let {
@@ -372,11 +403,12 @@ private fun ThreePaneScaffoldPaneScope.DetailPane(
                             }
 
                             LaunchedEffect(contentKey, bundle?.value) {
-                                if(contentKey is DetailPaneKey.PodcastEpisodeKey)
-                                    episodeId.value = contentKey.episodeId
+                                (contentKey as? DetailPaneKey.PodcastEpisodeKey)?.let {
+                                    episodeId.value = it.episodeId
+                                }
 
-                                displayBundle.value = bundle?.value != null
-                                        && contentKey is DetailPaneKey.PodcastEpisodeKey
+                                displayBundle.value = (bundle?.value != null)
+                                        && (contentKey is DetailPaneKey.PodcastEpisodeKey)
                             }
 
                             AnimatedContent(
@@ -392,30 +424,28 @@ private fun ThreePaneScaffoldPaneScope.DetailPane(
                                                 )
                                             }
                                         },
-                                        onClickEpisode = { episode ->
-                                            scope.launch {
-                                                scaffoldNavigator.navigateTo(
-                                                    pane = ThreePaneScaffoldRole.Primary,
-                                                    contentKey = DetailPaneKey.PodcastEpisodeKey(
-                                                        episodeOrigin = podcast.origin,
-                                                        episodeId = episode.id
-                                                    )
+                                    ) { episode ->
+                                        scope.launch {
+                                            scaffoldNavigator.navigateTo(
+                                                pane = ThreePaneScaffoldRole.Primary,
+                                                contentKey = DetailPaneKey.PodcastEpisodeKey(
+                                                    episodeOrigin = podcast.origin,
+                                                    episodeId = episode.id
                                                 )
-                                            }
+                                            )
                                         }
-                                    )
+                                    }
 
                                     true -> PodcastEpisodeDetailView(
                                         bundle = bundle!!.value!!,
                                         parent = podcast,
-                                        onBack = {
-                                            scope.launch {
-                                                scaffoldNavigator.navigateBack(
-                                                    backNavigationBehavior = BackNavigationBehavior.PopLatest
-                                                )
-                                            }
+                                    ) {
+                                        scope.launch {
+                                            scaffoldNavigator.navigateBack(
+                                                backNavigationBehavior = BackNavigationBehavior.PopLatest
+                                            )
                                         }
-                                    )
+                                    }
                                 }
                             }
                         }
@@ -453,14 +483,13 @@ private fun ThreePaneScaffoldPaneScope.DetailPane(
                                         )
                                     }
                                 },
-                                onBack = {
-                                    scope.launch {
-                                        scaffoldNavigator.navigateBack(
-                                            backNavigationBehavior = BackNavigationBehavior.PopLatest
-                                        )
-                                    }
+                            ) {
+                                scope.launch {
+                                    scaffoldNavigator.navigateBack(
+                                        backNavigationBehavior = BackNavigationBehavior.PopLatest
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }

@@ -7,13 +7,12 @@ import android.net.Uri
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.window.embedding.ActivityFilter
-import app.podiumpodcasts.podium.AppActivity
 import app.podiumpodcasts.podium.manager.DatabaseManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.milliseconds
 
 interface State {
     object SelectFile : State
@@ -57,7 +56,7 @@ class RestoreViewModel : ViewModel() {
                 }
 
                 DatabaseManager.restoreFromBackup(context, uri)
-                delay(500)
+                delay(500.milliseconds)
 
                 withContext(Dispatchers.Main) {
                     state.value = State.Restart

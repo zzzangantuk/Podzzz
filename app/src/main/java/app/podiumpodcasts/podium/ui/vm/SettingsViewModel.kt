@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 val UPDATE_PODCASTS_INTERVAL_VALUES = listOf(
     15,
@@ -35,7 +36,7 @@ val UPDATE_PODCASTS_INTERVAL_VALUES = listOf(
     540,
     600,
     660,
-    720
+    720,
 )
 
 enum class DeleteDownloadsAfterValues(
@@ -95,7 +96,7 @@ class SettingsViewModel(
     }
 
     fun calculateDatabaseSize(context: Context): String? {
-        val file = DatabaseManager.getDatabaseFile(context)!!.parentFile
+        val file = DatabaseManager.getDatabaseFile(context)?.parentFile ?: return null
         val sizeInBytes = file.walk()
             .filter { it.isFile }
             .sumOf { it.length() }
@@ -112,7 +113,7 @@ class SettingsViewModel(
             exportDatabaseState.value = ExportDatabaseState.Writing(file.name)
 
             DatabaseManager.writeBackupFile(context, file)
-            delay(500)
+            delay(500.milliseconds)
             DatabaseManager.shareBackupFile(context, file, title)
 
             exportDatabaseState.value = ExportDatabaseState.Idle

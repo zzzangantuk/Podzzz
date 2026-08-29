@@ -63,6 +63,7 @@ import com.materialkolor.ktx.themeColorOrNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -238,7 +239,7 @@ fun AddPodcastView(
                     LaunchedEffect(vm.seedColor) {
                         if(vm.seedColor == null) {
                             enableButton.value = false
-                            delay(2000)
+                            delay(2000.milliseconds)
                             enableButton.value = true
                         } else {
                             enableButton.value = true
@@ -288,7 +289,7 @@ fun AddPodcastView(
             ) {
                 LaunchedEffect(Unit) {
                     scope.launch {
-                        delay(500)
+                        delay(500.milliseconds)
                         onBack(vm.origin)
                     }
                 }

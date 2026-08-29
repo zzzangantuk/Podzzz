@@ -11,7 +11,7 @@ import app.podiumpodcasts.podium.utils.rss.toPodcastEpisode
 
 class SingularPodcastUpdateWork(
     val context: Context,
-    val db: AppDatabase
+    val db: AppDatabase,
 ) {
 
     private val fetchPodcastClient = FetchPodcastClient()
@@ -30,9 +30,10 @@ class SingularPodcastUpdateWork(
             response.rssChannel.toPodcast(oldPodcast.origin, response.fileSize, oldPodcast)
         db.podcasts().update(podcast)
 
-        val newEpisodes = response.rssChannel.items
+        val newEpisodes = response.rssChannel.items.asSequence()
             .filter { !episodeIds.contains("${podcast.origin}:${it.guid}") }
             .map { it.toPodcastEpisode(podcast = podcast, new = true) }
+            .toList()
 
         db.podcastEpisodes()
             .insertAllAndUpdateNewEpisodesCount(

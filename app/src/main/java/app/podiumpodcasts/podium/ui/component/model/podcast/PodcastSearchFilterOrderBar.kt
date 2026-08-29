@@ -39,6 +39,7 @@ import app.podiumpodcasts.podium.api.db.dao.PodcastEpisodesOrderBy
 import app.podiumpodcasts.podium.ui.dialog.bottomsheet.podcast.PodcastFilterBottomSheet
 import app.podiumpodcasts.podium.ui.dialog.bottomsheet.podcast.PodcastOrderBottomSheet
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 class PodcastSearchFilterOrderBarState {
 
@@ -79,7 +80,7 @@ fun PodcastSearchFilterOrderBar(
     }
 
     LaunchedEffect(textValue.value) {
-        delay(300)
+        delay(300.milliseconds)
         state.searchQuery.value = textValue.value
     }
 

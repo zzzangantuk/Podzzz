@@ -24,7 +24,7 @@ const val HEADER_OVERHEAD = 1024L
 class PodcastUpdateWork(
     val context: Context,
     val db: AppDatabase,
-    val settingsRepository: SettingsRepository = SettingsRepository(context)
+    val settingsRepository: SettingsRepository = SettingsRepository(context),
 ) {
 
     val fetchPodcastClient = FetchPodcastClient()
@@ -62,9 +62,10 @@ class PodcastUpdateWork(
                     val episodeIds = db.podcastEpisodes().getEpisodeIds(origin)
                     val podcast = subscription.podcast
 
-                    val newEpisodes = response.rssChannel.items
+                    val newEpisodes = response.rssChannel.items.asSequence()
                         .filter { !episodeIds.contains("$origin:${it.guid}") }
                         .map { it.toPodcastEpisode(podcast = podcast, new = true) }
+                        .toList()
 
                     if(subscription.subscription.enableNotifications) for(episode in newEpisodes) NewPodcastEpisodeNotification(
                         podcastTitle = podcast.fetchTitle(),
@@ -137,7 +138,7 @@ class PodcastUpdateWork(
 
         val request = ImageRequest.Builder(context)
             .data(rssChannel.image!!.url)
-            .allowHardware(false)
+            .allowHardware(enable = false)
             .build()
 
         val result = loader.execute(request)
