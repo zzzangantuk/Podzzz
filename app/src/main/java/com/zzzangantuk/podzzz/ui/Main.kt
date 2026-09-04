@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui
+package com.zzzangantuk.podzzz.ui
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
@@ -44,25 +44,25 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
-import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeModel
-import app.podiumpodcasts.podium.ui.component.common.SwitchableDynamicMaterialExpressiveTheme
-import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayer
-import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerHeight
-import app.podiumpodcasts.podium.ui.component.media.LocalFloatingMediaPlayerHeight
-import app.podiumpodcasts.podium.ui.component.media.LocalFloatingMediaPlayerShown
-import app.podiumpodcasts.podium.ui.dialog.bottomsheet.media.MediaPlayerBottomSheet
-import app.podiumpodcasts.podium.ui.helper.LocalDatabase
-import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
-import app.podiumpodcasts.podium.ui.navigation.Home
-import app.podiumpodcasts.podium.ui.navigation.NavBarItems
-import app.podiumpodcasts.podium.ui.navigation.NavBarScaffold
-import app.podiumpodcasts.podium.ui.navigation.Navigation
-import app.podiumpodcasts.podium.ui.navigation.PodiumNavKey
-import app.podiumpodcasts.podium.ui.route.settings.SettingsPane
-import app.podiumpodcasts.podium.ui.route.settings.SettingsPaneKey
-import app.podiumpodcasts.podium.ui.view.model.PodcastDetailView
-import app.podiumpodcasts.podium.ui.view.model.PodcastEpisodeDetailView
-import app.podiumpodcasts.podium.ui.vm.MainViewModel
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeModel
+import com.zzzangantuk.podzzz.ui.component.common.SwitchableDynamicMaterialExpressiveTheme
+import com.zzzangantuk.podzzz.ui.component.media.FloatingMediaPlayer
+import com.zzzangantuk.podzzz.ui.component.media.FloatingMediaPlayerHeight
+import com.zzzangantuk.podzzz.ui.component.media.LocalFloatingMediaPlayerHeight
+import com.zzzangantuk.podzzz.ui.component.media.LocalFloatingMediaPlayerShown
+import com.zzzangantuk.podzzz.ui.dialog.bottomsheet.media.MediaPlayerBottomSheet
+import com.zzzangantuk.podzzz.ui.helper.LocalDatabase
+import com.zzzangantuk.podzzz.ui.helper.LocalSettingsRepository
+import com.zzzangantuk.podzzz.ui.navigation.Home
+import com.zzzangantuk.podzzz.ui.navigation.NavBarItems
+import com.zzzangantuk.podzzz.ui.navigation.NavBarScaffold
+import com.zzzangantuk.podzzz.ui.navigation.Navigation
+import com.zzzangantuk.podzzz.ui.navigation.PodzzzNavKey
+import com.zzzangantuk.podzzz.ui.route.settings.SettingsPane
+import com.zzzangantuk.podzzz.ui.route.settings.SettingsPaneKey
+import com.zzzangantuk.podzzz.ui.view.model.PodcastDetailView
+import com.zzzangantuk.podzzz.ui.view.model.PodcastEpisodeDetailView
+import com.zzzangantuk.podzzz.ui.vm.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -155,7 +155,7 @@ fun Main(
         if(navigationScaffoldLayoutType != NavigationSuiteType.NavigationBar) return@LaunchedEffect
 
         val entry = backStack.last()
-        if(entry is PodiumNavKey) {
+        if(entry is PodzzzNavKey) {
             vm.hideFloatingMediaPlayer.value = !entry.showMediaPlayer
 
             val shouldNavBeVisible =

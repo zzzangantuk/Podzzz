@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium
+package com.zzzangantuk.podzzz
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -6,15 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.podiumpodcasts.podium.ui.DeepLink
-import app.podiumpodcasts.podium.ui.Main
-import app.podiumpodcasts.podium.ui.theme.PodiumTheme
+import com.zzzangantuk.podzzz.ui.DeepLink
+import com.zzzangantuk.podzzz.ui.Main
+import com.zzzangantuk.podzzz.ui.theme.PodzzzTheme
 
 @Composable
-fun PodiumApp(
+fun PodzzzApp(
     deepLink: DeepLink?
 ) {
-    PodiumTheme {
+    PodzzzTheme {
         Box(
             Modifier
                 .fillMaxSize()

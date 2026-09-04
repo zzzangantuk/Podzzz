@@ -1,14 +1,14 @@
-package app.podiumpodcasts.podium.api.sync.gpodder
+package com.zzzangantuk.podzzz.api.sync.gpodder
 
 import android.os.Build
-import app.podiumpodcasts.podium.BuildConfig
-import app.podiumpodcasts.podium.api.sync.SyncClient
-import app.podiumpodcasts.podium.api.sync.gpodder.route.Auth
-import app.podiumpodcasts.podium.api.sync.gpodder.route.Device
-import app.podiumpodcasts.podium.api.sync.gpodder.route.EpisodeActions
-import app.podiumpodcasts.podium.api.sync.gpodder.route.Subscriptions
-import app.podiumpodcasts.podium.api.sync.model.result.SyncResult
-import app.podiumpodcasts.podium.utils.json
+import com.zzzangantuk.podzzz.BuildConfig
+import com.zzzangantuk.podzzz.api.sync.SyncClient
+import com.zzzangantuk.podzzz.api.sync.gpodder.route.Auth
+import com.zzzangantuk.podzzz.api.sync.gpodder.route.Device
+import com.zzzangantuk.podzzz.api.sync.gpodder.route.EpisodeActions
+import com.zzzangantuk.podzzz.api.sync.gpodder.route.Subscriptions
+import com.zzzangantuk.podzzz.api.sync.model.result.SyncResult
+import com.zzzangantuk.podzzz.utils.json
 import com.google.common.net.HttpHeaders
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -39,9 +39,9 @@ class GpodderClient(
             val os = "Android ${Build.VERSION.RELEASE}"
             val model = Build.MODEL
 
-            val github = "https://github.com/aimok04/podium"
+            val github = "https://github.com/zzzangantuk/podzzz"
 
-            header(HttpHeaders.USER_AGENT, "podium/$appVersion ($os; $model; +$github)")
+            header(HttpHeaders.USER_AGENT, "podzzz/$appVersion ($os; $model; +$github)")
             header(HttpHeaders.COOKIE, cookie)
         }
 

@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.component
+package com.zzzangantuk.podzzz.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -8,13 +8,13 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import app.podiumpodcasts.podium.ui.component.media.LocalFloatingMediaPlayerHeight
+import com.zzzangantuk.podzzz.ui.component.media.LocalFloatingMediaPlayerHeight
 
 /**
  * A snackbar host but respecting the floating media player height and adjusted design
  */
 @Composable
-fun PodiumSnackbarHost(
+fun PodzzzSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     snackbar: @Composable (SnackbarData) -> Unit = {

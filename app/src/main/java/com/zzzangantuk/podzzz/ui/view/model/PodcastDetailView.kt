@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.view.model
+package com.zzzangantuk.podzzz.ui.view.model
 
 import androidx.activity.compose.LocalActivity
 import androidx.annotation.StringRes
@@ -94,36 +94,36 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import app.podiumpodcasts.podium.AppActivity
-import app.podiumpodcasts.podium.R
-import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeBundle
-import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeModel
-import app.podiumpodcasts.podium.api.db.model.PodcastModel
-import app.podiumpodcasts.podium.ui.component.DetailsList
-import app.podiumpodcasts.podium.ui.component.DetailsListItemModel
-import app.podiumpodcasts.podium.ui.component.PodiumSnackbarHost
-import app.podiumpodcasts.podium.ui.component.common.BackButton
-import app.podiumpodcasts.podium.ui.component.common.BubbleButton
-import app.podiumpodcasts.podium.ui.component.common.ButtonLabelWithIconInset
-import app.podiumpodcasts.podium.ui.component.common.ExpandableText
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItem
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActionResult
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActions
-import app.podiumpodcasts.podium.ui.component.layout.InfoLayout
-import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerBreakpoint
-import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerSpacer
-import app.podiumpodcasts.podium.ui.component.media.LocalFloatingMediaPlayerHeight
-import app.podiumpodcasts.podium.ui.component.model.ContentFavoriteButton
-import app.podiumpodcasts.podium.ui.component.model.ContentSaveToListButton
-import app.podiumpodcasts.podium.ui.component.model.episode.PodcastEpisodeListItem
-import app.podiumpodcasts.podium.ui.component.model.podcast.PodcastSearchFilterOrderBar
-import app.podiumpodcasts.podium.ui.dialog.DeleteConfirmationDialog
-import app.podiumpodcasts.podium.ui.dialog.ShimmerAsyncImage
-import app.podiumpodcasts.podium.ui.dialog.bottomsheet.PodcastSettingsBottomSheet
-import app.podiumpodcasts.podium.ui.formatFileSize
-import app.podiumpodcasts.podium.ui.helper.LocalDatabase
-import app.podiumpodcasts.podium.ui.theme.Typography
-import app.podiumpodcasts.podium.ui.vm.PodcastDetailViewModel
+import com.zzzangantuk.podzzz.AppActivity
+import com.zzzangantuk.podzzz.R
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeBundle
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeModel
+import com.zzzangantuk.podzzz.api.db.model.PodcastModel
+import com.zzzangantuk.podzzz.ui.component.DetailsList
+import com.zzzangantuk.podzzz.ui.component.DetailsListItemModel
+import com.zzzangantuk.podzzz.ui.component.PodzzzSnackbarHost
+import com.zzzangantuk.podzzz.ui.component.common.BackButton
+import com.zzzangantuk.podzzz.ui.component.common.BubbleButton
+import com.zzzangantuk.podzzz.ui.component.common.ButtonLabelWithIconInset
+import com.zzzangantuk.podzzz.ui.component.common.ExpandableText
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItem
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItemActionResult
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItemActions
+import com.zzzangantuk.podzzz.ui.component.layout.InfoLayout
+import com.zzzangantuk.podzzz.ui.component.media.FloatingMediaPlayerBreakpoint
+import com.zzzangantuk.podzzz.ui.component.media.FloatingMediaPlayerSpacer
+import com.zzzangantuk.podzzz.ui.component.media.LocalFloatingMediaPlayerHeight
+import com.zzzangantuk.podzzz.ui.component.model.ContentFavoriteButton
+import com.zzzangantuk.podzzz.ui.component.model.ContentSaveToListButton
+import com.zzzangantuk.podzzz.ui.component.model.episode.PodcastEpisodeListItem
+import com.zzzangantuk.podzzz.ui.component.model.podcast.PodcastSearchFilterOrderBar
+import com.zzzangantuk.podzzz.ui.dialog.DeleteConfirmationDialog
+import com.zzzangantuk.podzzz.ui.dialog.ShimmerAsyncImage
+import com.zzzangantuk.podzzz.ui.dialog.bottomsheet.PodcastSettingsBottomSheet
+import com.zzzangantuk.podzzz.ui.formatFileSize
+import com.zzzangantuk.podzzz.ui.helper.LocalDatabase
+import com.zzzangantuk.podzzz.ui.theme.Typography
+import com.zzzangantuk.podzzz.ui.vm.PodcastDetailViewModel
 import coil3.compose.AsyncImagePainter
 import com.materialkolor.ktx.harmonizeWithPrimary
 import dev.chrisbanes.haze.hazeEffect
@@ -179,7 +179,7 @@ fun PodcastDetailView(
         BoxWithConstraints {
             Scaffold(
                 snackbarHost = {
-                    PodiumSnackbarHost(vm.snackbarHostState)
+                    PodzzzSnackbarHost(vm.snackbarHostState)
                 },
                 topBar = {
                     TopAppBar(

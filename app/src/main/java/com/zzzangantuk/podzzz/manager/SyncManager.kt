@@ -1,10 +1,10 @@
-package app.podiumpodcasts.podium.manager
+package com.zzzangantuk.podzzz.manager
 
 import android.content.Context
-import app.podiumpodcasts.podium.SettingsRepository
-import app.podiumpodcasts.podium.api.sync.UnifiedSyncClient
-import app.podiumpodcasts.podium.api.sync.UnifiedSyncClientType
-import app.podiumpodcasts.podium.utils.getFriendlyDeviceName
+import com.zzzangantuk.podzzz.SettingsRepository
+import com.zzzangantuk.podzzz.api.sync.UnifiedSyncClient
+import com.zzzangantuk.podzzz.api.sync.UnifiedSyncClientType
+import com.zzzangantuk.podzzz.utils.getFriendlyDeviceName
 import kotlinx.coroutines.flow.first
 import java.util.UUID
 
@@ -50,7 +50,7 @@ class SyncManager {
         }
 
         fun generateDeviceCaption(context: Context): String {
-            return "podium on ${getFriendlyDeviceName(context)}"
+            return "podzzz on ${getFriendlyDeviceName(context)}"
         }
     }
 

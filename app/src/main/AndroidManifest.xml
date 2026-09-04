@@ -18,12 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.Podium">
+        android:theme="@style/Theme.Podzzz">
         <activity
             android:name=".AppActivity"
             android:exported="true"
             android:configChanges="density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
-            android:theme="@style/Theme.Podium"
+            android:theme="@style/Theme.Podzzz"
             android:windowSoftInputMode="adjustPan"
             android:enableOnBackInvokedCallback="true" />
 

@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.navigation
+package com.zzzangantuk.podzzz.ui.navigation
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -12,68 +12,68 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.ui.NavDisplay
-import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeModel
-import app.podiumpodcasts.podium.ui.DetailPaneKey
-import app.podiumpodcasts.podium.ui.route.add.AddPodcastRoute
-import app.podiumpodcasts.podium.ui.route.content.ContinuePlayingRoute
-import app.podiumpodcasts.podium.ui.route.content.LocallyAvailableRoute
-import app.podiumpodcasts.podium.ui.route.content.NewEpisodesRoute
-import app.podiumpodcasts.podium.ui.route.content.SubscriptionsRoute
-import app.podiumpodcasts.podium.ui.route.discover.DiscoverRoute
-import app.podiumpodcasts.podium.ui.route.downloads.DownloadsRoute
-import app.podiumpodcasts.podium.ui.route.history.HistoryRoute
-import app.podiumpodcasts.podium.ui.route.home.HomeRoute
-import app.podiumpodcasts.podium.ui.route.importing.OpmlImportingRoute
-import app.podiumpodcasts.podium.ui.route.library.LibraryRoute
-import app.podiumpodcasts.podium.ui.route.licenses.LicensesRoute
-import app.podiumpodcasts.podium.ui.route.list.ListRoute
-import app.podiumpodcasts.podium.ui.route.restore.RestoreRoute
-import app.podiumpodcasts.podium.ui.route.settings.SettingsRoute
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeModel
+import com.zzzangantuk.podzzz.ui.DetailPaneKey
+import com.zzzangantuk.podzzz.ui.route.add.AddPodcastRoute
+import com.zzzangantuk.podzzz.ui.route.content.ContinuePlayingRoute
+import com.zzzangantuk.podzzz.ui.route.content.LocallyAvailableRoute
+import com.zzzangantuk.podzzz.ui.route.content.NewEpisodesRoute
+import com.zzzangantuk.podzzz.ui.route.content.SubscriptionsRoute
+import com.zzzangantuk.podzzz.ui.route.discover.DiscoverRoute
+import com.zzzangantuk.podzzz.ui.route.downloads.DownloadsRoute
+import com.zzzangantuk.podzzz.ui.route.history.HistoryRoute
+import com.zzzangantuk.podzzz.ui.route.home.HomeRoute
+import com.zzzangantuk.podzzz.ui.route.importing.OpmlImportingRoute
+import com.zzzangantuk.podzzz.ui.route.library.LibraryRoute
+import com.zzzangantuk.podzzz.ui.route.licenses.LicensesRoute
+import com.zzzangantuk.podzzz.ui.route.list.ListRoute
+import com.zzzangantuk.podzzz.ui.route.restore.RestoreRoute
+import com.zzzangantuk.podzzz.ui.route.settings.SettingsRoute
 import kotlinx.serialization.Serializable
 
 // Routes
 @Serializable
-open class PodiumNavKey(
+open class PodzzzNavKey(
     val showNavBar: Boolean = true,
     val showMediaPlayer: Boolean = true,
 ) : NavKey
 
 @Serializable
-data object Home : PodiumNavKey()
+data object Home : PodzzzNavKey()
 @Serializable
-data object Discover : PodiumNavKey()
+data object Discover : PodzzzNavKey()
 @Serializable
-data object Library : PodiumNavKey()
+data object Library : PodzzzNavKey()
 
 @Serializable
-data object History : PodiumNavKey(showNavBar = false)
+data object History : PodzzzNavKey(showNavBar = false)
 @Serializable
-data object Downloads : PodiumNavKey(showNavBar = false)
+data object Downloads : PodzzzNavKey(showNavBar = false)
 @Serializable
-data object Subscriptions : PodiumNavKey(showNavBar = false)
+data object Subscriptions : PodzzzNavKey(showNavBar = false)
 @Serializable
-data object ContinuePlaying : PodiumNavKey(showNavBar = false)
+data object ContinuePlaying : PodzzzNavKey(showNavBar = false)
 @Serializable
-data object NewEpisodes : PodiumNavKey(showNavBar = false)
+data object NewEpisodes : PodzzzNavKey(showNavBar = false)
 @Serializable
-data object LocallyAvailable : PodiumNavKey(showNavBar = false)
+data object LocallyAvailable : PodzzzNavKey(showNavBar = false)
 
 @Serializable
-data class List(val listId: Int) : PodiumNavKey(showNavBar = false)
+data class List(val listId: Int) : PodzzzNavKey(showNavBar = false)
 
 @Serializable
-data object AddPodcast : PodiumNavKey(showNavBar = false, showMediaPlayer = false)
+data object AddPodcast : PodzzzNavKey(showNavBar = false, showMediaPlayer = false)
 @Serializable
-data object Settings : PodiumNavKey(showNavBar = false, showMediaPlayer = false)
+data object Settings : PodzzzNavKey(showNavBar = false, showMediaPlayer = false)
 @Serializable
-data object Licenses : PodiumNavKey(showNavBar = false, showMediaPlayer = false)
+data object Licenses : PodzzzNavKey(showNavBar = false, showMediaPlayer = false)
 @Serializable
-data object Restore : PodiumNavKey(showNavBar = false, showMediaPlayer = false)
+data object Restore : PodzzzNavKey(showNavBar = false, showMediaPlayer = false)
 
 @Serializable
-data object OpmlImporting : PodiumNavKey(showNavBar = false, showMediaPlayer = false)
+data object OpmlImporting : PodzzzNavKey(showNavBar = false, showMediaPlayer = false)
 @Serializable
-data object Unknown : PodiumNavKey()
+data object Unknown : PodzzzNavKey()
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable

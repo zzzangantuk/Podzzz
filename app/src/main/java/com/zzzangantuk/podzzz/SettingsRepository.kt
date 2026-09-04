@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium
+package com.zzzangantuk.podzzz
 
 import android.content.ComponentName
 import android.content.Context
@@ -87,7 +87,7 @@ class SettingsRepository(val context: Context) {
             }
 
         suspend fun setUseAlternativeBranding(context: Context, enable: Boolean): Preferences {
-            val basePackage = "app.podiumpodcasts.podium"
+            val basePackage = "com.zzzangantuk.podzzz"
             val default = ComponentName(context.packageName, "$basePackage.Default")
             val alias = ComponentName(context.packageName, "$basePackage.Alias")
 

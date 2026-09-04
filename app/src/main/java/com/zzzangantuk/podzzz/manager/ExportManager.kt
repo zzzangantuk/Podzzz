@@ -1,11 +1,11 @@
-package app.podiumpodcasts.podium.manager
+package com.zzzangantuk.podzzz.manager
 
 import android.content.Context
 import android.text.format.DateFormat
-import app.podiumpodcasts.podium.api.db.AppDatabase
-import app.podiumpodcasts.podium.api.opml.model.OpmlBody
-import app.podiumpodcasts.podium.api.opml.model.OpmlFile
-import app.podiumpodcasts.podium.api.opml.model.OpmlHead
+import com.zzzangantuk.podzzz.api.db.AppDatabase
+import com.zzzangantuk.podzzz.api.opml.model.OpmlBody
+import com.zzzangantuk.podzzz.api.opml.model.OpmlFile
+import com.zzzangantuk.podzzz.api.opml.model.OpmlHead
 import java.io.File
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -31,7 +31,7 @@ class ExportManager(
         val opmlFile = OpmlFile(
             version = "2.0",
             head = OpmlHead(
-                title = "podium Subscriptions",
+                title = "Podzzz Subscriptions",
                 dateCreated = dateCreated
             ),
             body = OpmlBody(

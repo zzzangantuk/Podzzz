@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.route.content
+package com.zzzangantuk.podzzz.ui.route.content
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,19 +28,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import app.podiumpodcasts.podium.R
-import app.podiumpodcasts.podium.api.db.model.PodcastEpisodeModel
-import app.podiumpodcasts.podium.ui.component.PodiumSnackbarHost
-import app.podiumpodcasts.podium.ui.component.common.BackButton
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItem
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActionResult
-import app.podiumpodcasts.podium.ui.component.common.swipeable.SwipeableItemActions
-import app.podiumpodcasts.podium.ui.component.layout.InfoLayout
-import app.podiumpodcasts.podium.ui.component.media.FloatingMediaPlayerSpacer
-import app.podiumpodcasts.podium.ui.component.model.episode.PodcastEpisodeListItem
-import app.podiumpodcasts.podium.ui.helper.LocalDatabase
-import app.podiumpodcasts.podium.ui.helper.PagerScaffold
-import app.podiumpodcasts.podium.ui.vm.home.NewEpisodesViewModel
+import com.zzzangantuk.podzzz.R
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeModel
+import com.zzzangantuk.podzzz.ui.component.PodzzzSnackbarHost
+import com.zzzangantuk.podzzz.ui.component.common.BackButton
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItem
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItemActionResult
+import com.zzzangantuk.podzzz.ui.component.common.swipeable.SwipeableItemActions
+import com.zzzangantuk.podzzz.ui.component.layout.InfoLayout
+import com.zzzangantuk.podzzz.ui.component.media.FloatingMediaPlayerSpacer
+import com.zzzangantuk.podzzz.ui.component.model.episode.PodcastEpisodeListItem
+import com.zzzangantuk.podzzz.ui.helper.LocalDatabase
+import com.zzzangantuk.podzzz.ui.helper.PagerScaffold
+import com.zzzangantuk.podzzz.ui.vm.home.NewEpisodesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -62,7 +62,7 @@ fun NewEpisodesRoute(
     Scaffold(
         Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         snackbarHost = {
-            PodiumSnackbarHost(snackbarHostState)
+            PodzzzSnackbarHost(snackbarHostState)
         },
         topBar = {
             CenterAlignedTopAppBar(

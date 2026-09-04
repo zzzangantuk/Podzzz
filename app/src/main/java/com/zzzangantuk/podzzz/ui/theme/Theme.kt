@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.theme
+package com.zzzangantuk.podzzz.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun PodiumTheme(
+fun PodzzzTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

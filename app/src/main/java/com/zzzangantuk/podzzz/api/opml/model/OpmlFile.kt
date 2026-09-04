@@ -1,6 +1,6 @@
-package app.podiumpodcasts.podium.api.opml.model
+package com.zzzangantuk.podzzz.api.opml.model
 
-import app.podiumpodcasts.podium.utils.xml
+import com.zzzangantuk.podzzz.utils.xml
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -16,7 +16,7 @@ data class OpmlFile(
 ) {
     companion object {
         fun parse(xml: String): OpmlFile {
-            return app.podiumpodcasts.podium.utils.xml.decodeFromString<OpmlFile>(xml)
+            return com.zzzangantuk.podzzz.utils.xml.decodeFromString<OpmlFile>(xml)
         }
     }
 
