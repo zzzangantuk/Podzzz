@@ -1,0 +1,30 @@
+package com.zzzangantuk.podzzz.ui.component.layout
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.zzzangantuk.podzzz.ui.theme.Typography
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun ListHeading(
+    heading: String,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(12.dp),
+) {
+    Box(
+        modifier.padding(contentPadding),
+    ) {
+        Text(
+            text = heading,
+            color = MaterialTheme.colorScheme.primary,
+            style = Typography.titleMediumEmphasized,
+        )
+    }
+}

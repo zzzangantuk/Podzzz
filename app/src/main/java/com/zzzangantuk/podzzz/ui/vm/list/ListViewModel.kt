@@ -1,0 +1,76 @@
+package com.zzzangantuk.podzzz.ui.vm.list
+
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import com.zzzangantuk.podzzz.api.db.AppDatabase
+import com.zzzangantuk.podzzz.api.db.model.ListItemModelBundle
+import com.zzzangantuk.podzzz.api.db.model.SystemLists
+import com.zzzangantuk.podzzz.ui.dialog.bottomsheet.ListEditBottomSheetState
+import kotlinx.coroutines.launch
+
+class ListViewModel(
+    val db: AppDatabase,
+    val listId: Int
+) : ViewModel() {
+
+    val lazyListState = LazyListState()
+
+    val listEditBottomSheetState = ListEditBottomSheetState()
+    val showDeleteDialog = mutableStateOf(false)
+
+    val items = Pager(
+        PagingConfig(
+            pageSize = 15
+        )
+    ) {
+        db.listItems()
+            .all(listId)
+    }.flow
+
+    fun deleteList() {
+        viewModelScope.launch {
+            db.lists().delete(listId)
+        }
+    }
+
+    fun restore(item: ListItemModelBundle) {
+        viewModelScope.launch {
+            val tempPosition = db.listItems().getNextPosition(SystemLists.FAVORITES.id)
+                ?: 0
+
+            val listItemId = db.listItems().addListItemAndRefreshItemCount(
+                listId = item.listItem.listId,
+                contentId = item.listItem.contentId,
+                isPodcast = item.listItem.isPodcast,
+                position = tempPosition
+            )
+
+            db.listItems().moveAndReindex(
+                listId = item.listItem.listId,
+                itemId = listItemId,
+                fromPos = tempPosition,
+                toPos = item.listItem.position
+            )
+        }
+    }
+
+    fun delete(item: ListItemModelBundle) {
+        viewModelScope.launch {
+            db.listItems().deleteAndReindex(
+                listId = item.listItem.listId,
+                itemId = item.listItem.id,
+                deletedPosition = item.listItem.position
+            )
+        }
+    }
+
+    suspend fun move(from: Int, to: Int) {
+        val id = db.listItems().getItemIdAtPosition(listId, from)
+        db.listItems().moveAndReindex(listId, id ?: 0, from, to)
+    }
+
+}

@@ -1,0 +1,381 @@
+package com.zzzangantuk.podzzz.ui.vm
+
+import android.content.Context
+import android.os.Bundle
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import com.zzzangantuk.podzzz.api.db.AppDatabase
+import com.zzzangantuk.podzzz.api.db.model.MediaMetadataExtra
+import com.zzzangantuk.podzzz.api.db.model.PodcastEpisodeBundle
+import com.zzzangantuk.podzzz.background.COMMAND_SET_SEEK_BACK_INCREMENT
+import com.zzzangantuk.podzzz.background.COMMAND_SET_SEEK_FORWARD_INCREMENT
+import com.zzzangantuk.podzzz.background.COMMAND_SLEEP_TIMER_GET
+import com.zzzangantuk.podzzz.background.COMMAND_SLEEP_TIMER_SET
+import com.zzzangantuk.podzzz.utils.getEpisodeId
+import com.zzzangantuk.podzzz.utils.getImageSeedColor
+import com.zzzangantuk.podzzz.utils.getOrigin
+import com.zzzangantuk.podzzz.utils.isDownload
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
+
+interface SourceTypeState {
+    object Unknown : SourceTypeState
+    object Streaming : SourceTypeState
+    object Downloaded : SourceTypeState
+}
+
+class MediaPlayerViewModel : ViewModel() {
+
+    lateinit var db: AppDatabase
+
+    private var mediaController: MediaController? = null
+
+    var isPlayerVisible by mutableStateOf(value = false)
+
+    var isPlaying by mutableStateOf(false)
+    var playWhenReady by mutableStateOf(false)
+    var isLoading by mutableStateOf(false)
+    var playbackState by mutableIntStateOf(1)
+
+    var seekBackIncrement by mutableLongStateOf(10000)
+    var seekForwardIncrement by mutableLongStateOf(10000)
+
+    var speed by mutableFloatStateOf(1f)
+
+    var lastProgressUpdate by mutableLongStateOf(0L)
+    var currentDuration by mutableLongStateOf(1L)
+    var currentPosition by mutableLongStateOf(1L)
+
+    // unix millis when sleep timer should trigger
+    var sleepTimerTrigger by mutableStateOf<Long?>(null)
+
+    var metadataOrigin by mutableStateOf<String?>(null)
+    var metadataEpisodeId by mutableStateOf<String?>(null)
+    var metadataImageSeedColor by mutableStateOf<Int?>(null)
+
+    var mediaMetadata by mutableStateOf<MediaMetadata?>(null)
+
+    var mediaSourceType by mutableStateOf<SourceTypeState>(SourceTypeState.Unknown)
+
+    val queue = mutableStateListOf<String>()
+    val queueIndex = mutableStateListOf<Int>()
+
+    fun play(
+        context: Context,
+        bundle: PodcastEpisodeBundle,
+    ) {
+        if(bundle.episode.new) viewModelScope.launch {
+            db.podcastEpisodes().unnewAndUpdateNewEpisodesCount(
+                origin = bundle.episode.origin,
+                episodeId = bundle.episode.id
+            )
+        }
+
+        val mediaItem = bundle.episode
+            .createMediaItem(context)
+
+        mediaController?.setMediaItem(mediaItem, bundle.playState!!.state * 1000L)
+        mediaController?.play()
+    }
+
+    fun enqueue(
+        context: Context,
+        bundle: PodcastEpisodeBundle
+    ) {
+        val mediaItem = bundle.createMediaItem(context)
+
+        mediaController?.addMediaItem(mediaItem)
+        syncQueue()
+    }
+
+    fun dequeue(
+        episodeId: String
+    ) {
+        mediaController?.let { mediaController ->
+            for(index in 0..mediaController.mediaItemCount) {
+                if(index == mediaController.currentMediaItemIndex) continue
+
+                val mediaItem = mediaController.getMediaItemAt(index)
+                val mediaItemEpisodeId =
+                    mediaItem.mediaMetadata.extras?.getString(MediaMetadataExtra.EPISODE_ID.name)
+
+                if(episodeId != mediaItemEpisodeId) continue
+
+                mediaController.removeMediaItem(index)
+                break
+            }
+        }
+
+        syncQueue()
+    }
+
+    fun play() {
+        mediaController?.play()
+    }
+
+    fun pause() {
+        mediaController?.pause()
+    }
+
+    fun seek(position: Long) {
+        mediaController?.seekTo(position)
+    }
+
+    fun seekBack() {
+        mediaController?.seekBack()
+    }
+
+    fun seekForward() {
+        mediaController?.seekForward()
+    }
+
+    fun setPlaybackSpeed(speed: Float) {
+        mediaController?.setPlaybackSpeed(speed)
+    }
+
+    fun setSleepTimer(sleepTimer: Long?): Boolean {
+        val result = mediaController?.sendCustomCommand(
+            SessionCommand(COMMAND_SLEEP_TIMER_SET, Bundle().apply {
+                putLong("trigger", sleepTimer ?: 0L)
+            }),
+            Bundle()
+        )?.get()
+
+        updateSleepTimer()
+        return result?.resultCode == SessionResult.RESULT_SUCCESS
+    }
+
+    fun updateSleepTimer() {
+        val result = mediaController?.sendCustomCommand(
+            SessionCommand(COMMAND_SLEEP_TIMER_GET, Bundle()),
+            Bundle()
+        )?.get()
+
+        this.sleepTimerTrigger = result?.extras?.getLong("trigger", 0L)
+            .takeIf { it != 0L }
+    }
+
+    fun updateSeekBackIncrement(
+        increment: Long
+    ) {
+        mediaController?.sendCustomCommand(
+            SessionCommand(COMMAND_SET_SEEK_BACK_INCREMENT, Bundle().apply {
+                putLong("increment", increment)
+            }),
+            Bundle()
+        )
+    }
+
+    fun updateSeekForwardIncrement(
+        increment: Long
+    ) {
+        mediaController?.sendCustomCommand(
+            SessionCommand(COMMAND_SET_SEEK_FORWARD_INCREMENT, Bundle().apply {
+                putLong("increment", increment)
+            }),
+            Bundle()
+        )
+    }
+
+    @Composable
+    fun getProgressState(): MutableFloatState {
+        val progressState = remember { mutableFloatStateOf(0f) }
+
+        LaunchedEffect(lastProgressUpdate) {
+            while(true) {
+                val difference = System.currentTimeMillis() - lastProgressUpdate
+                val realCurrentPosition = if(isPlaying) {
+                    currentPosition + (difference * speed)
+                } else {
+                    currentPosition
+                }
+
+                progressState.floatValue = realCurrentPosition.toFloat() / currentDuration
+
+                delay(16.milliseconds)
+            }
+        }
+
+        return progressState
+    }
+
+    /**
+     * Returns sleep timer state (in minutes)
+     */
+    @Composable
+    fun getSleepTimerState(): MutableState<Int?> {
+        val sleepTimerState = remember { mutableStateOf<Int?>(null) }
+
+        LaunchedEffect(sleepTimerTrigger) {
+            while(true) {
+                sleepTimerState.value = sleepTimerTrigger?.let { unixMillis ->
+                    val diff = unixMillis - System.currentTimeMillis()
+                    ((diff / 1000L) / 60f).roundToInt()
+                }
+
+                delay((1000 * 30).milliseconds)
+            }
+        }
+
+        return sleepTimerState
+    }
+
+    fun syncQueue() {
+        mediaController?.let { mediaController ->
+            queue.clear()
+            queueIndex.clear()
+
+            repeat(mediaController.mediaItemCount) { index ->
+                if(mediaController.currentMediaItemIndex >= index) return@repeat
+
+                val mediaItem = mediaController.getMediaItemAt(index)
+                mediaItem.mediaMetadata.extras?.getString(MediaMetadataExtra.EPISODE_ID.name)
+                    ?.let { episodeId ->
+                        queue.add(episodeId)
+                        queueIndex.add(index)
+                    }
+            }
+        }
+    }
+
+    @Composable
+    fun rememberMediaItemAt(index: Int): MediaItem? {
+        var mediaItem by remember { mutableStateOf<MediaItem?>(null) }
+        LaunchedEffect(queueIndex.toList()) {
+            mediaItem = mediaController?.getMediaItemAt(index)
+        }
+
+        return mediaItem
+    }
+
+    val listener = object : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            this@MediaPlayerViewModel.isPlaying = isPlaying
+            super.onIsPlayingChanged(isPlaying)
+        }
+
+        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+            this@MediaPlayerViewModel.playWhenReady = playWhenReady
+            super.onPlayWhenReadyChanged(playWhenReady, reason)
+        }
+
+        override fun onEvents(player: Player, events: Player.Events) {
+            this@MediaPlayerViewModel.currentDuration = player.duration.coerceAtLeast(1L)
+            this@MediaPlayerViewModel.currentPosition = player.currentPosition
+            this@MediaPlayerViewModel.lastProgressUpdate = System.currentTimeMillis()
+            this@MediaPlayerViewModel.updateSleepTimer()
+            super.onEvents(player, events)
+        }
+
+        override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
+            this@MediaPlayerViewModel.speed = playbackParameters.speed
+            super.onPlaybackParametersChanged(playbackParameters)
+        }
+
+        override fun onIsLoadingChanged(isLoading: Boolean) {
+            this@MediaPlayerViewModel.isLoading = isLoading
+            super.onIsLoadingChanged(isLoading)
+        }
+
+        override fun onSeekBackIncrementChanged(seekBackIncrementMs: Long) {
+            this@MediaPlayerViewModel.seekBackIncrement = seekBackIncrementMs
+            super.onSeekBackIncrementChanged(seekBackIncrementMs)
+        }
+
+        override fun onSeekForwardIncrementChanged(seekForwardIncrementMs: Long) {
+            this@MediaPlayerViewModel.seekForwardIncrement = seekForwardIncrementMs
+            super.onSeekForwardIncrementChanged(seekForwardIncrementMs)
+        }
+
+        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+            this@MediaPlayerViewModel.mediaMetadata = mediaMetadata
+            this@MediaPlayerViewModel.metadataOrigin = mediaMetadata.getOrigin()
+            this@MediaPlayerViewModel.metadataEpisodeId = mediaMetadata.getEpisodeId()
+            this@MediaPlayerViewModel.metadataImageSeedColor = mediaMetadata.getImageSeedColor()
+
+            this@MediaPlayerViewModel.mediaSourceType = when(mediaMetadata.isDownload()) {
+                true -> SourceTypeState.Downloaded
+                false -> SourceTypeState.Streaming
+            }
+
+            syncQueue()
+
+            super.onMediaMetadataChanged(mediaMetadata)
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            this@MediaPlayerViewModel.playbackState = playbackState
+            this@MediaPlayerViewModel.isPlayerVisible = playbackState != Player.STATE_IDLE
+
+            super.onPlaybackStateChanged(playbackState)
+        }
+    }
+
+    fun registerMediaController(mediaController: MediaController) {
+        this@MediaPlayerViewModel.mediaController = mediaController
+
+        this@MediaPlayerViewModel.isPlaying = mediaController.isPlaying
+        this@MediaPlayerViewModel.playWhenReady = mediaController.playWhenReady
+
+        this@MediaPlayerViewModel.currentDuration = mediaController.duration.coerceAtLeast(1L)
+        this@MediaPlayerViewModel.currentPosition = mediaController.currentPosition
+        this@MediaPlayerViewModel.lastProgressUpdate = System.currentTimeMillis()
+
+        this@MediaPlayerViewModel.seekBackIncrement = mediaController.seekBackIncrement
+        this@MediaPlayerViewModel.seekForwardIncrement = mediaController.seekForwardIncrement
+
+        this@MediaPlayerViewModel.speed = mediaController.playbackParameters.speed
+
+        this@MediaPlayerViewModel.isLoading = mediaController.isLoading
+
+        this@MediaPlayerViewModel.mediaMetadata = mediaController.mediaMetadata
+        mediaController.currentMediaItem?.let { mediaItem ->
+            this@MediaPlayerViewModel.metadataOrigin = mediaItem.getOrigin()
+            this@MediaPlayerViewModel.metadataEpisodeId = mediaItem.getEpisodeId()
+            this@MediaPlayerViewModel.metadataImageSeedColor = mediaItem.getImageSeedColor()
+
+            this@MediaPlayerViewModel.mediaSourceType = when(mediaItem.isDownload()) {
+                true -> SourceTypeState.Downloaded
+                false -> SourceTypeState.Streaming
+            }
+        }
+
+        this@MediaPlayerViewModel.playbackState = mediaController.playbackState
+        this@MediaPlayerViewModel.isPlayerVisible =
+            mediaController.playbackState != Player.STATE_IDLE
+
+        syncQueue()
+
+        mediaController.addListener(listener)
+    }
+
+    fun unregisterMediaController() {
+        mediaController?.removeListener(listener)
+    }
+
+    fun passDB(db: AppDatabase) {
+        this.db = db
+    }
+
+}
