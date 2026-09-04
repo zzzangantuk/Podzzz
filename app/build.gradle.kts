@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "app.podiumpodcasts.podium"
+    namespace = "com.zzzangantuk.podzzz"
     compileSdk {
         version = release(37)
     }
@@ -22,11 +22,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "app.podiumpodcasts.podium"
+        applicationId = "com.zzzangantuk.podzzz"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1000008
-        versionName = "1.0.0-alpha08"
+        versionCode = 1
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +49,7 @@ android {
                 "proguard-rules.pro",
             )
 
-            signingConfig = signingConfigs["release"]
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -164,6 +164,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

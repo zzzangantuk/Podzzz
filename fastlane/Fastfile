@@ -62,7 +62,7 @@ lane :deploy_github do
     FileUtils.cp("out/release.apk", "out/gh/app-release.apk")
 
     set_github_release(
-        repository_name: "aimok04/podium",
+        repository_name: "zzzangantuk/podzzz",
         api_token: ENV["GITHUB_TOKEN"],
         name: "v#{version}",
         tag_name: "v#{version}",
@@ -81,7 +81,7 @@ lane :deploy_github_pre_release do
     FileUtils.cp("out/release.apk", "out/gh/app-release.apk")
 
     set_github_release(
-        repository_name: "aimok04/podium",
+        repository_name: "zzzangantuk/podzzz",
         api_token: ENV["GITHUB_TOKEN"],
         name: "v#{version}",
         tag_name: "v#{version}",
