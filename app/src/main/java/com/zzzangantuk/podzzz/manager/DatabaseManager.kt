@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.manager
+package com.zzzangantuk.podzzz.manager
 
 import android.content.Context
 import android.content.Intent
@@ -6,8 +6,8 @@ import android.net.Uri
 import android.text.format.DateFormat
 import androidx.core.content.FileProvider
 import androidx.room.Room
-import app.podiumpodcasts.podium.api.db.ALL_MIGRATIONS
-import app.podiumpodcasts.podium.api.db.AppDatabase
+import com.zzzangantuk.podzzz.api.db.ALL_MIGRATIONS
+import com.zzzangantuk.podzzz.api.db.AppDatabase
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -16,13 +16,25 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-const val DATABASE_NAME = "podiumDB"
-const val DATABASE_EXTENSION = "podiumdb"
+const val DATABASE_NAME = "podzzzDB"
+const val DATABASE_EXTENSION = "podzzzdb"
+
+const val LEGACY_DATABASE_NAME = "podiumDB"
 
 val DATABASE_BACKUP_FILES = arrayOf(
-    "podiumDB",
-    "podiumDB-shm",
-    "podiumDB-wal"
+    "podzzzDB",
+    "podzzzDB-shm",
+    "podzzzDB-wal"
+)
+
+val DATABASE_BACKUP_MAP = mapOf(
+    "podzzzDB" to "podzzzDB",
+    "podzzzDB-shm" to "podzzzDB-shm",
+    "podzzzDB-wal" to "podzzzDB-wal",
+
+    "podiumDB" to "podzzzDB",
+    "podiumDB-shm" to "podzzzDB-shm",
+    "podiumDB-wal" to "podzzzDB-wal"
 )
 
 class DatabaseManager {
@@ -103,7 +115,7 @@ class DatabaseManager {
                 ZipInputStream(input).use { zipInputStream ->
                     var entry = zipInputStream.nextEntry
                     while(entry != null) {
-                        if(entry.name == DATABASE_NAME) return true
+                        if(entry.name == DATABASE_NAME || entry.name == LEGACY_DATABASE_NAME) return true
                         entry = zipInputStream.nextEntry
                     }
                 }
@@ -119,17 +131,18 @@ class DatabaseManager {
                 ZipInputStream(inputStream).use { zipInputStream ->
                     var entry = zipInputStream.nextEntry
                     while(entry != null) {
-                        if(entry.name in DATABASE_BACKUP_FILES) {
-                            val destination = File(dbDir, entry.name)
+                        val destinationName = DATABASE_BACKUP_MAP[entry.name]
+                        if(destinationName != null) {
+                            val destination = File(dbDir, destinationName)
                             if(destination.exists()) destination.delete()
 
                             destination.outputStream().use { outputStream ->
                                 zipInputStream.copyTo(outputStream)
                             }
-
-                            zipInputStream.closeEntry()
-                            entry = zipInputStream.nextEntry
                         }
+
+                        zipInputStream.closeEntry()
+                        entry = zipInputStream.nextEntry
                     }
                 }
             }

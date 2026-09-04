@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.ui.route.settings
+package com.zzzangantuk.podzzz.ui.route.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,25 +47,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import app.podiumpodcasts.podium.GITHUB_LINK
-import app.podiumpodcasts.podium.KOFI_LINK
-import app.podiumpodcasts.podium.R
-import app.podiumpodcasts.podium.ui.component.common.BackButton
-import app.podiumpodcasts.podium.ui.component.common.ExperimentalBadge
-import app.podiumpodcasts.podium.ui.component.layout.ListHeading
-import app.podiumpodcasts.podium.ui.component.settings.SettingsListItem
-import app.podiumpodcasts.podium.ui.helper.LocalDatabase
-import app.podiumpodcasts.podium.ui.helper.LocalSettingsRepository
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsAppearanceKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsBackgroundActivityKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsDatabaseKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsDebugKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsDownloadsAndStorageKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsPlaybackKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsPrivacyKey
-import app.podiumpodcasts.podium.ui.route.settings.pane.SettingsSynchronizationKey
-import app.podiumpodcasts.podium.ui.vm.RoamingWarningDialogState
-import app.podiumpodcasts.podium.ui.vm.SettingsViewModel
+import com.zzzangantuk.podzzz.GITHUB_LINK
+import com.zzzangantuk.podzzz.KOFI_LINK
+import com.zzzangantuk.podzzz.R
+import com.zzzangantuk.podzzz.ui.component.common.BackButton
+import com.zzzangantuk.podzzz.ui.component.common.ExperimentalBadge
+import com.zzzangantuk.podzzz.ui.component.layout.ListHeading
+import com.zzzangantuk.podzzz.ui.component.settings.SettingsListItem
+import com.zzzangantuk.podzzz.ui.helper.LocalDatabase
+import com.zzzangantuk.podzzz.ui.helper.LocalSettingsRepository
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsAppearanceKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsBackgroundActivityKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsDatabaseKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsDebugKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsDownloadsAndStorageKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsPlaybackKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsPrivacyKey
+import com.zzzangantuk.podzzz.ui.route.settings.pane.SettingsSynchronizationKey
+import com.zzzangantuk.podzzz.ui.vm.RoamingWarningDialogState
+import com.zzzangantuk.podzzz.ui.vm.SettingsViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -188,8 +188,8 @@ fun SettingsRoute(
                             contentDescription = ""
                         )
                     },
-                    label = "Support the development on Ko-Fi",
-                    description = "You could buy me a coffee over there :)",
+                    label = "Based on Podium by aimok04",
+                    description = "Support Him on Ko-Fi",
 
                     index = 2,
                     count = 3,

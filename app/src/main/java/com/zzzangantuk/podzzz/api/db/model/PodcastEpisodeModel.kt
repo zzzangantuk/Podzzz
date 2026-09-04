@@ -1,4 +1,4 @@
-package app.podiumpodcasts.podium.api.db.model
+package com.zzzangantuk.podzzz.api.db.model
 
 import android.content.Context
 import android.net.Uri
@@ -11,8 +11,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
-import app.podiumpodcasts.podium.manager.DownloadManager
-import app.podiumpodcasts.podium.utils.sha256
+import com.zzzangantuk.podzzz.manager.DownloadManager
+import com.zzzangantuk.podzzz.utils.sha256
 import java.io.File
 
 enum class MediaMetadataExtra {
@@ -120,6 +120,7 @@ data class PodcastEpisodeModel(
     ): File {
         val podcastDownloadsDir =
             File(DownloadManager.getDownloadsDirectory(context), origin.sha256())
+        if (!podcastDownloadsDir.exists()) podcastDownloadsDir.mkdirs()
         return File(podcastDownloadsDir, audioUrl.sha256())
     }
 }

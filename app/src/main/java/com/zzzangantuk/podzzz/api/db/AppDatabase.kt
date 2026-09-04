@@ -40,7 +40,7 @@ import com.zzzangantuk.podzzz.api.db.model.statistics.UpdatePodcastRunModel
         UpdatePodcastRunModel::class,
 
         SyncActionModel::class
-    ], version = 1, exportSchema = true
+    ], version = 16, exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun podcasts(): PodcastDao
