@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">podium</string>
+    <string name="app_name">Podzzz</string>
     <string name="app_name_alternative">Podcasts</string>
     <string name="badge_powered_by_apple_podcasts">Via Apple Podcasts</string>
     <string name="badge_powered_by_apple_podcasts_text">%1$s utilise plusieurs APIs d\'Apple fournissant les fonctionnalités \"Recherche\" et \"Découvrir\". Vous pouvez désactiver l\'utilisation des APIs Apple dans les paramètres.</string>
@@ -226,7 +226,7 @@
     <string name="route_settings_appearance_enable_artwork_colors">Activer les couleurs des illustrations</string>
     <string name="route_settings_appearance_enable_artwork_colors_description">Utiliser un thème dynamique basé sur l\'illustration dans le lecteur et sur la page de détails du podcast</string>
     <string name="route_settings_appearance_use_alternative_branding">Utiliser le branding » Podcasts «</string>
-    <string name="route_settings_appearance_use_alternative_branding_description">podium sera nommé » Podcasts « à la place</string>
+    <string name="route_settings_appearance_use_alternative_branding_description">Podzzz sera nommé » Podcasts « à la place</string>
     <string name="route_settings_background_activity">Activité en arrière-plan</string>
     <string name="route_settings_background_activity_allow_update_while_roaming">Autoriser la mise-à-jour des podcasts en itinérance</string>
     <string name="route_settings_background_activity_allow_update_while_roaming_description">Utiliser les données mobiles sur un réseau étranger peut entraîner des frais importants de la part de votre fournisseur.</string>
@@ -270,5 +270,7 @@
     <string name="route_settings_player_seek_forward_increment">Avancer de…</string>
     <string name="route_settings_privacy">Confidentialité</string>
     <string name="route_settings_privacy_disable_apple_podcasts_api">Désactiver l\'utilisation de l\'API d\'Apple Podcasts</string>
-    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Si cette option est activée, podium n\'utilisera plus l\'API d\'Apple Podcasts</string>
+    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Si cette option est activée, Podzzz n\'utilisera plus l\'API d\'Apple Podcasts</string>
+    <string name="route_settings_about_attribution_based_on">Basé sur le projet open-source Podium par aimok04</string>
+    <string name="route_settings_about_attribution_maintained_by">Rebrandé et maintenu par zzzangantuk sous le nom de Podzzz</string>
 </resources>

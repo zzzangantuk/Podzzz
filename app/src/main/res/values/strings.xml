@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="app_name">podium</string>
+    <string name="app_name">Podzzz</string>
     <string name="app_name_alternative">Podcasts</string>
 
     <string name="badge_powered_by_apple_podcasts">Powered by Apple Podcasts</string>
@@ -182,7 +182,7 @@
     <string name="route_settings_appearance_enable_artwork_colors">Enable artwork colors</string>
     <string name="route_settings_appearance_enable_artwork_colors_description">Use dynamic theme based off artwork colors in media player and podcast detail pages</string>
     <string name="route_settings_appearance_use_alternative_branding">Use » Podcasts « branding</string>
-    <string name="route_settings_appearance_use_alternative_branding_description">podium will be called » Podcasts « instead</string>
+    <string name="route_settings_appearance_use_alternative_branding_description">Podzzz will be called » Podcasts « instead</string>
     <string name="route_settings_background_activity">Background activity</string>
     <string name="route_settings_background_activity_allow_update_while_roaming">Allow updating podcasts while roaming</string>
     <string name="route_settings_background_activity_allow_update_while_roaming_description">Using data on foreign networks can result in significant roaming charges from your carrier</string>
@@ -226,7 +226,7 @@
     <string name="route_settings_player_seek_forward_increment">Seek forward increment</string>
     <string name="route_settings_privacy">Privacy</string>
     <string name="route_settings_privacy_disable_apple_podcasts_api">Disable usage of Apple Podcasts API</string>
-    <string name="route_settings_privacy_disable_apple_podcasts_api_description">podium will no longer use the Apple Podcasts API if enabled</string>
+    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Podzzz will no longer use the Apple Podcasts API if enabled</string>
     <string name="route_settings_roaming_warning_description">Using data on foreign networks can result in significant roaming charges from your carrier. Do you want to continue?</string>
     <string name="route_settings_roaming_warning_title">Caution</string>
     <string name="route_settings_synchronization">Synchronization</string>
@@ -287,4 +287,6 @@
     <string name="view_podcast_settings_subscription_enable_automatic_downloads_description">New episodes will be downloaded automatically</string>
     <string name="view_podcast_settings_subscription_enable_notifications">Enable notifications</string>
     <string name="view_podcast_settings_subscription_enable_notifications_description">Receive notifications when new episodes get released</string>
+    <string name="route_settings_about_attribution_based_on">Based on the open-source Podium project by aimok04</string>
+    <string name="route_settings_about_attribution_maintained_by">Rebranded and maintained by zzzangantuk as Podzzz</string>
 </resources>

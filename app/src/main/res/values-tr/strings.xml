@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="app_name">podium</string>
+    <string name="app_name">Podzzz</string>
     <string name="app_name_alternative">Podcast\'ler</string>
     <string name="badge_powered_by_apple_podcasts">Apple Podcasts tarafından desteklenmektedir</string>
     <string name="badge_powered_by_apple_podcasts_text">%1$s, Keşfet ve Arama özelliklerini sağlayan birden fazla Apple API\'si kullanır.\n\nAyarlardan Apple API\'lerinin kullanımını devre dışı bırakabilirsin.</string>
@@ -140,7 +140,7 @@
     <string name="route_settings_appearance_enable_artwork_colors">Kapak görseli renklerini etkinleştir</string>
     <string name="route_settings_appearance_enable_artwork_colors_description">Medya oynatıcı ve podcast detay sayfalarında kapak renklerine dayalı dinamik temayı kullan</string>
     <string name="route_settings_appearance_use_alternative_branding">» Podcast\'ler « markasını kullan</string>
-    <string name="route_settings_appearance_use_alternative_branding_description">podium, bunun yerine » Podcast\'ler « olarak adlandırılacak</string>
+    <string name="route_settings_appearance_use_alternative_branding_description">Podzzz, bunun yerine » Podcast\'ler « olarak adlandırılacak</string>
     <string name="route_settings_background_activity">Arka plan etkinliği</string>
     <string name="route_settings_background_activity_allow_update_while_roaming">Dolaşımdayken (Roaming) podcast\'lerin güncellenmesine izin ver</string>
     <string name="route_settings_background_activity_allow_update_while_roaming_description">Yabancı ağlarda veri kullanmak, operatöründen kaynaklı yüksek dolaşım ücretlerine yol açabilir</string>
@@ -182,7 +182,7 @@
     <string name="route_settings_player_seek_forward_increment">İleri sarma süresi</string>
     <string name="route_settings_privacy">Gizlilik</string>
     <string name="route_settings_privacy_disable_apple_podcasts_api">Apple Podcasts API kullanımını devre dışı bırak</string>
-    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Etkinleştirilirse, podium artık Apple Podcasts API\'sini kullanmayacaktır</string>
+    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Etkinleştirilirse, Podzzz artık Apple Podcasts API\'sini kullanmayacaktır</string>
     <string name="route_settings_roaming_warning_description">Yabancı ağlarda veri kullanmak, operatöründen kaynaklı yüksek dolaşım ücretlerine yol açabilir. Devam etmek istiyor musun?</string>
     <string name="route_settings_roaming_warning_title">Dikkat</string>
     <string name="route_subscriptions">Abonelikler</string>
@@ -226,4 +226,6 @@
     <string name="view_podcast_settings_subscription_enable_automatic_downloads_description">Yeni bölümler otomatik olarak indirilecek</string>
     <string name="view_podcast_settings_subscription_enable_notifications">Bildirimleri etkinleştir</string>
     <string name="view_podcast_settings_subscription_enable_notifications_description">Yeni bölümler yayınlandığında bildirim al</string>
+    <string name="route_settings_about_attribution_based_on">aimok04\'ün açık kaynaklı Podium projesine dayanmaktadır</string>
+    <string name="route_settings_about_attribution_maintained_by">zzzangantuk tarafından Podzzz olarak yeniden markalandı ve sürdürülüyor</string>
 </resources>

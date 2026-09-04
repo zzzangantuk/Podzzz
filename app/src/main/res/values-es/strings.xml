@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
-    <string name="app_name">podium</string>
+    <string name="app_name">Podzzz</string>
     <string name="app_name_alternative">Podcasts</string>
 
     <string name="badge_powered_by_apple_podcasts">Con tecnología de Apple Podcasts</string>
@@ -148,7 +148,7 @@
     <string name="route_settings_appearance_enable_artwork_colors">Habilitar colores de portada</string>
     <string name="route_settings_appearance_enable_artwork_colors_description">Utilizar un tema dinámico en base a los colores de la portada en el reproductor multimedia y en las páginas de detalles del podcast</string>
     <string name="route_settings_appearance_use_alternative_branding">Usar » Podcasts « como identidad</string>
-    <string name="route_settings_appearance_use_alternative_branding_description">podium será llamado » Podcasts « en su lugar</string>
+    <string name="route_settings_appearance_use_alternative_branding_description">Podzzz se llamará » Podcasts « en su lugar</string>
     <string name="route_settings_background_activity">Actividad en segundo plano</string>
     <string name="route_settings_background_activity_allow_update_while_roaming">Permitir actualizar podcasts mientras utilizas roaming</string>
     <string name="route_settings_background_activity_allow_update_while_roaming_description">Utilizar datos en redes foraneas puede resultar en cargos significativos por roaming por parte de tu operador</string>
@@ -190,7 +190,7 @@
     <string name="route_settings_player_seek_forward_increment">Incremento del avance rápido</string>
     <string name="route_settings_privacy">Privacidad</string>
     <string name="route_settings_privacy_disable_apple_podcasts_api">Deshabilitar el uso de la API de Apple Podcasts</string>
-    <string name="route_settings_privacy_disable_apple_podcasts_api_description">podium no volverá a utilizar la API de Apple Podcasts si esta opción se habilita</string>
+    <string name="route_settings_privacy_disable_apple_podcasts_api_description">Podzzz no volverá a utilizar la API de Apple Podcasts si esta opción se habilita</string>
     <string name="route_settings_roaming_warning_description">Utilizar datos en redes foráneas puede resultar en cargos significativos por roaming por parte de tu operador. ¿Quieres continuar?</string>
     <string name="route_settings_roaming_warning_title">Atención</string>
     <string name="route_subscriptions">Suscripciones</string>
@@ -238,4 +238,6 @@
     <string name="view_podcast_settings_subscription_enable_automatic_downloads_description">Los episodios nuevos serán descargados automáticamente</string>
     <string name="view_podcast_settings_subscription_enable_notifications">Habilitar notificaciones</string>
     <string name="view_podcast_settings_subscription_enable_notifications_description">Recibir notificaciones cuando se lancen nuevos episodios</string>
+    <string name="route_settings_about_attribution_based_on">Basado en el proyecto de código abierto Podium de aimok04</string>
+    <string name="route_settings_about_attribution_maintained_by">Renombrado y mantenido por zzzangantuk como Podzzz</string>
 </resources>
