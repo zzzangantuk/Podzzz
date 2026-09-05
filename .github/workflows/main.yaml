@@ -70,16 +70,16 @@ jobs:
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
 
       - name: Rename APK for Release
-        run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/app_${{ env.VERSION_NAME }}.apk
+        run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Podzzz-v${{ env.VERSION_NAME }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.VERSION_NAME }}
-          name: Podzzz ${{ env.VERSION_NAME }}
+          name: Podzzz v${{ env.VERSION_NAME }} (Initial Release)
           body_path: CHANGELOG.md
-          draft: true
+          draft: false
           files: |
-            app/build/outputs/apk/release/app_${{ env.VERSION_NAME }}.apk
+            app/build/outputs/apk/release/Podzzz-v${{ env.VERSION_NAME }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
